@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/segmented_tab_bar.dart';
+import '../widgets/theme_toggle_button.dart';
 import 'stats/day_stats_view.dart';
 import 'stats/month_stats_view.dart';
 import 'stats/week_stats_view.dart';
@@ -22,19 +24,22 @@ class _StatsScreenState extends State<StatsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Statistiques')),
+      appBar: AppBar(
+          title: const Text('Statistiques'),
+          actions: const [ThemeToggleButton()]),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(16),
-            child: SegmentedButton<_StatsSegment>(
+            child: SegmentedTabBar<_StatsSegment>(
               segments: const [
-                ButtonSegment(value: _StatsSegment.day, label: Text('Jour')),
-                ButtonSegment(value: _StatsSegment.week, label: Text('Semaine')),
-                ButtonSegment(value: _StatsSegment.month, label: Text('Mois')),
+                SegmentedTabBarItem(value: _StatsSegment.day, label: 'Jour'),
+                SegmentedTabBarItem(
+                    value: _StatsSegment.week, label: 'Semaine'),
+                SegmentedTabBarItem(value: _StatsSegment.month, label: 'Mois'),
               ],
-              selected: <_StatsSegment>{_segment},
-              onSelectionChanged: (selection) => setState(() => _segment = selection.first),
+              selected: _segment,
+              onChanged: (value) => setState(() => _segment = value),
             ),
           ),
           Expanded(

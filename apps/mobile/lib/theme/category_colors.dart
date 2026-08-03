@@ -21,26 +21,28 @@ class CategoryVisual {
 }
 
 const Map<CategoryId, Color> _lightCategoryColors = <CategoryId, Color>{
-  CategoryId.work: Color(0xFF3F6C8F),
-  CategoryId.sport: Color(0xFF4C8C5A),
-  CategoryId.leisure: Color(0xFFB5632B),
-  CategoryId.sleep: Color(0xFF6E5FA3),
-  CategoryId.social: Color(0xFFC24E6E),
-  CategoryId.other: Color(0xFF7A7167),
+  CategoryId.work: Color(0xFF185FA5),
+  CategoryId.sport: Color(0xFF0F6E56),
+  CategoryId.leisure: Color(0xFF534AB7),
+  CategoryId.sleep: Color(0xFF0E7490),
+  CategoryId.social: Color(0xFFD4537E),
+  CategoryId.other: Color(0xFF9A6410),
 };
 
 const Map<CategoryId, Color> _darkCategoryColors = <CategoryId, Color>{
-  CategoryId.work: Color(0xFF7FA9CC),
-  CategoryId.sport: Color(0xFF84C08F),
-  CategoryId.leisure: Color(0xFFE0925A),
-  CategoryId.sleep: Color(0xFFA79BD6),
-  CategoryId.social: Color(0xFFE18AA2),
-  CategoryId.other: Color(0xFFA69C8E),
+  CategoryId.work: Color(0xFF5AA0E6),
+  CategoryId.sport: Color(0xFF38C39C),
+  CategoryId.leisure: Color(0xFF9A90F0),
+  CategoryId.sleep: Color(0xFF45C0DC),
+  CategoryId.social: Color(0xFFF080A6),
+  CategoryId.other: Color(0xFFE0A64A),
 };
 
 /// Rendu visuel de toutes les catégories pour la [brightness] donnée.
 Map<CategoryId, CategoryVisual> categoryVisuals(Brightness brightness) {
-  final colors = brightness == Brightness.dark ? _darkCategoryColors : _lightCategoryColors;
+  final colors = brightness == Brightness.dark
+      ? _darkCategoryColors
+      : _lightCategoryColors;
   return <CategoryId, CategoryVisual>{
     for (final id in CategoryId.values)
       id: CategoryVisual(
@@ -54,7 +56,9 @@ Map<CategoryId, CategoryVisual> categoryVisuals(Brightness brightness) {
 
 /// Rendu visuel d'une seule catégorie pour la [brightness] donnée.
 CategoryVisual categoryVisualFor(CategoryId id, Brightness brightness) {
-  final colors = brightness == Brightness.dark ? _darkCategoryColors : _lightCategoryColors;
+  final colors = brightness == Brightness.dark
+      ? _darkCategoryColors
+      : _lightCategoryColors;
   return CategoryVisual(
     id: id,
     emoji: categoryMetaFor(id).emoji,

@@ -9,6 +9,7 @@ import '../dev/seeds.dart';
 import '../sheets/activity_detail_sheet.dart';
 import '../sheets/new_activity_sheet.dart';
 import '../widgets/current_activity_card.dart';
+import '../widgets/theme_toggle_button.dart';
 import '../widgets/timeline.dart';
 
 /// Écran 1 — Aujourd'hui : activité en cours (RG-03), chronologie du jour,
@@ -25,6 +26,7 @@ class TodayScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text("Aujourd'hui"),
         actions: [
+          const ThemeToggleButton(),
           // Bouton de seed, uniquement en debug (kDebugMode) — permet de
           // visualiser timeline/graphiques/historique sans saisie
           // manuelle (`lib/dev/seeds.dart`), jamais présent en build release.
@@ -48,11 +50,13 @@ class TodayScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 24),
             ],
-            Text('Chronologie', style: Theme.of(context).textTheme.headlineSmall),
+            Text('Chronologie',
+                style: Theme.of(context).textTheme.headlineSmall),
             const SizedBox(height: 12),
             Timeline(
               activities: activities,
-              onTapActivity: (activity) => showActivityDetailSheet(context, activity),
+              onTapActivity: (activity) =>
+                  showActivityDetailSheet(context, activity),
             ),
           ],
         ),
@@ -66,13 +70,15 @@ class TodayScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _closeActivity(BuildContext context, WidgetRef ref, Activity activity) async {
+  Future<void> _closeActivity(
+      BuildContext context, WidgetRef ref, Activity activity) async {
     try {
       final closed = closeActivity(activity, DateTime.now());
       await ref.read(activityRepositoryProvider).save(closed);
     } on ActivityValidationException catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.toString())));
       }
     }
   }

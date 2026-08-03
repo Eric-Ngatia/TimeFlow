@@ -19,6 +19,7 @@ class TimeFlowColors extends ThemeExtension<TimeFlowColors> {
     required this.accent,
     required this.tabbar,
     required this.shadow,
+    required this.tabBarAccent,
   });
 
   /// Fond général de l'écran.
@@ -51,30 +52,36 @@ class TimeFlowColors extends ThemeExtension<TimeFlowColors> {
   /// Couleur d'ombre portée.
   final Color shadow;
 
+  /// Couleur d'accent spécifique à l'état actif de la barre d'onglets basse,
+  /// distincte de [accent].
+  final Color tabBarAccent;
+
   static const TimeFlowColors light = TimeFlowColors(
-    bg: Color(0xFFFAF7F2),
+    bg: Color(0xFFF7F6F2),
     surface: Color(0xFFFFFFFF),
-    surface2: Color(0xFFF3EEE6),
-    text: Color(0xFF211D19),
-    muted: Color(0xFF7A7167),
-    border: Color(0xFFE7E0D5),
-    inputBorder: Color(0xFFD8CFC0),
-    accent: Color(0xFFB5632B),
-    tabbar: Color(0xFFFFFFFF),
-    shadow: Color(0x1A211D19),
+    surface2: Color(0xFFFBFAF6),
+    text: Color(0xFF1C1B1A),
+    muted: Color(0xFF8A94A0),
+    border: Color(0xFFE7E3DA),
+    inputBorder: Color(0xFFDAD5CB),
+    accent: Color(0xFF1A3A5C),
+    tabbar: Color(0xDBF7F6F2),
+    shadow: Color(0x0D000000),
+    tabBarAccent: Color(0xFF1A3A5C),
   );
 
   static const TimeFlowColors dark = TimeFlowColors(
-    bg: Color(0xFF161311),
-    surface: Color(0xFF201B17),
-    surface2: Color(0xFF2A241E),
-    text: Color(0xFFF3EEE6),
-    muted: Color(0xFFA69C8E),
-    border: Color(0xFF39322A),
-    inputBorder: Color(0xFF4A4136),
-    accent: Color(0xFFE0925A),
-    tabbar: Color(0xFF201B17),
-    shadow: Color(0x33000000),
+    bg: Color(0xFF12161B),
+    surface: Color(0xFF1C2229),
+    surface2: Color(0xFF161B21),
+    text: Color(0xFFECEAE4),
+    muted: Color(0xFF6B7280),
+    border: Color(0xFF2A313A),
+    inputBorder: Color(0xFF39424D),
+    accent: Color(0xFF3E7CB8),
+    tabbar: Color(0xDB12161B),
+    shadow: Color(0x66000000),
+    tabBarAccent: Color(0xFF6EA8DA),
   );
 
   @override
@@ -89,6 +96,7 @@ class TimeFlowColors extends ThemeExtension<TimeFlowColors> {
     Color? accent,
     Color? tabbar,
     Color? shadow,
+    Color? tabBarAccent,
   }) {
     return TimeFlowColors(
       bg: bg ?? this.bg,
@@ -101,6 +109,7 @@ class TimeFlowColors extends ThemeExtension<TimeFlowColors> {
       accent: accent ?? this.accent,
       tabbar: tabbar ?? this.tabbar,
       shadow: shadow ?? this.shadow,
+      tabBarAccent: tabBarAccent ?? this.tabBarAccent,
     );
   }
 
@@ -118,6 +127,7 @@ class TimeFlowColors extends ThemeExtension<TimeFlowColors> {
       accent: Color.lerp(accent, other.accent, t)!,
       tabbar: Color.lerp(tabbar, other.tabbar, t)!,
       shadow: Color.lerp(shadow, other.shadow, t)!,
+      tabBarAccent: Color.lerp(tabBarAccent, other.tabBarAccent, t)!,
     );
   }
 }

@@ -25,7 +25,8 @@ class AppTheme {
       onSurface: tokens.text,
     );
 
-    final textTheme = buildTextTheme(color: tokens.text, mutedColor: tokens.muted);
+    final textTheme =
+        buildTextTheme(color: tokens.text, mutedColor: tokens.muted);
 
     return ThemeData(
       useMaterial3: true,
@@ -70,7 +71,7 @@ class AppTheme {
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: tokens.tabbar,
-        selectedItemColor: tokens.accent,
+        selectedItemColor: tokens.tabBarAccent,
         unselectedItemColor: tokens.muted,
       ),
       extensions: <ThemeExtension<dynamic>>[tokens],
