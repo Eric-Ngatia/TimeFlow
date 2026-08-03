@@ -29,7 +29,9 @@ void main() {
     await db.close();
   });
 
-  testWidgets('affiche « Clôturer maintenant » seulement si l\'activité est en cours (RG-03)', (tester) async {
+  testWidgets(
+      'affiche « Clôturer maintenant » seulement si l\'activité est en cours (RG-03)',
+      (tester) async {
     final activity = _buildActivity();
 
     await tester.pumpWidget(
@@ -46,7 +48,8 @@ void main() {
     expect(find.text('Clôturer maintenant'), findsOneWidget);
   });
 
-  testWidgets('masque « Clôturer maintenant » si l\'activité est déjà clôturée', (tester) async {
+  testWidgets('masque « Clôturer maintenant » si l\'activité est déjà clôturée',
+      (tester) async {
     final activity = _buildActivity(endTime: DateTime.now());
 
     await tester.pumpWidget(
@@ -63,7 +66,8 @@ void main() {
     expect(find.text('Clôturer maintenant'), findsNothing);
   });
 
-  testWidgets('Modifier ouvre NewActivitySheet pré-rempli (risque #7 du plan)', (tester) async {
+  testWidgets('Modifier ouvre NewActivitySheet pré-rempli (risque #7 du plan)',
+      (tester) async {
     final activity = _buildActivity(endTime: DateTime.now());
 
     await tester.pumpWidget(
@@ -84,7 +88,9 @@ void main() {
     expect(find.text('Réunion'), findsWidgets);
   });
 
-  testWidgets('Supprimer demande confirmation avant suppression définitive (RG-08)', (tester) async {
+  testWidgets(
+      'Supprimer demande confirmation avant suppression définitive (RG-08)',
+      (tester) async {
     final activity = _buildActivity(endTime: DateTime.now());
     final dao = ActivitiesDao(db);
     await dao.save(activity);
@@ -106,7 +112,8 @@ void main() {
     expect(find.text("Supprimer l'activité ?"), findsOneWidget);
 
     await tester.tap(
-      find.descendant(of: find.byType(AlertDialog), matching: find.text('Supprimer')),
+      find.descendant(
+          of: find.byType(AlertDialog), matching: find.text('Supprimer')),
     );
     await tester.pumpAndSettle();
 
@@ -120,7 +127,65 @@ void main() {
     });
   });
 
-  testWidgets('Annuler dans la confirmation ne supprime pas l\'activité', (tester) async {
+  testWidgets(
+    'Modifier et Supprimer sont côte à côte sur la même ligne, activité en cours',
+    (tester) async {
+      final activity = _buildActivity(); // en cours (RG-03)
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [databaseProvider.overrideWithValue(db)],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            home: Scaffold(body: ActivityDetailSheet(activity: activity)),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      final modifierTop =
+          tester.getTopLeft(find.widgetWithText(OutlinedButton, 'Modifier'));
+      final supprimerTop =
+          tester.getTopLeft(find.widgetWithText(TextButton, 'Supprimer'));
+
+      // Même ligne : même position verticale, position horizontale différente.
+      expect(modifierTop.dy, supprimerTop.dy);
+      expect(modifierTop.dx, isNot(supprimerTop.dx));
+    },
+  );
+
+  testWidgets(
+    'Modifier et Supprimer sont côte à côte sur la même ligne, activité terminée',
+    (tester) async {
+      final activity = _buildActivity(endTime: DateTime.now());
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [databaseProvider.overrideWithValue(db)],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            home: Scaffold(body: ActivityDetailSheet(activity: activity)),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      // Pas de bouton « Clôturer maintenant » : Modifier/Supprimer restent
+      // dans le même `Row`, sans duplication de layout selon `isInProgress`.
+      expect(find.text('Clôturer maintenant'), findsNothing);
+
+      final modifierTop =
+          tester.getTopLeft(find.widgetWithText(OutlinedButton, 'Modifier'));
+      final supprimerTop =
+          tester.getTopLeft(find.widgetWithText(TextButton, 'Supprimer'));
+
+      expect(modifierTop.dy, supprimerTop.dy);
+      expect(modifierTop.dx, isNot(supprimerTop.dx));
+    },
+  );
+
+  testWidgets('Annuler dans la confirmation ne supprime pas l\'activité',
+      (tester) async {
     final activity = _buildActivity(endTime: DateTime.now());
     final dao = ActivitiesDao(db);
     await dao.save(activity);

@@ -48,12 +48,32 @@ RangeStats aggregateRange({
 ///
 /// [days] n'a pas besoin d'être trié : le résultat ne dépend pas de
 /// l'ordre d'entrée.
+/// Fusionne les répartitions par catégorie de plusieurs [DayStats] (déjà
+/// agrégés en SQL — RG-07) en une seule map minutes par catégorie sur toute
+/// la plage.
+///
+/// Combinaison pure de valeurs déjà agrégées, pas une nouvelle règle
+/// métier : utilisée pour le donut Semaine/Mois (RG-07).
+///
+/// Liste vide → map vide. Les catégories absentes d'un jour donné ne
+/// contribuent simplement pas à la somme (pas d'entrée à 0 forcée).
+Map<CategoryId, int> mergeByCategory(List<DayStats> days) {
+  final merged = <CategoryId, int>{};
+  for (final day in days) {
+    for (final entry in day.byCategory.entries) {
+      merged[entry.key] = (merged[entry.key] ?? 0) + entry.value;
+    }
+  }
+  return merged;
+}
+
 RangeStats rangeStatsFromDays(List<DayStats> days) {
   final totalMin = days.fold<int>(0, (sum, day) => sum + day.totalMin);
   final daysTracked = days.length;
   final averageScore = daysTracked == 0
       ? 0.0
-      : days.fold<int>(0, (sum, day) => sum + day.productivityScore) / daysTracked;
+      : days.fold<int>(0, (sum, day) => sum + day.productivityScore) /
+          daysTracked;
 
   return RangeStats(
     days: days,

@@ -5,6 +5,7 @@ import '../../application/activities_provider.dart';
 import '../../application/stats_provider.dart';
 import '../../utils/format_duration.dart';
 import '../../widgets/charts/category_donut_chart.dart';
+import '../../widgets/charts/category_legend.dart';
 import '../../widgets/kpi_card.dart';
 import '../../widgets/score_badge.dart';
 
@@ -22,6 +23,8 @@ class DayStatsView extends ConsumerWidget {
         padding: const EdgeInsets.all(16),
         children: [
           CategoryDonutChart(minutesByCategory: stats.byCategory),
+          const SizedBox(height: 12),
+          CategoryLegend(minutesByCategory: stats.byCategory),
           const SizedBox(height: 24),
           KpiCard(
             label: 'Score de productivité',
@@ -29,7 +32,9 @@ class DayStatsView extends ConsumerWidget {
             trailing: ScoreBadge(score: stats.productivityScore),
           ),
           const SizedBox(height: 12),
-          KpiCard(label: 'Temps de travail total', value: formatDurationLabel(stats.totalMin)),
+          KpiCard(
+              label: 'Temps de travail total',
+              value: formatDurationLabel(stats.totalMin)),
         ],
       ),
       loading: () => const Center(child: CircularProgressIndicator()),

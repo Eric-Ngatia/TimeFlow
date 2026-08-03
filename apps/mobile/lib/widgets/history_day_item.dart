@@ -3,14 +3,8 @@ import 'package:timeflow_domain/timeflow_domain.dart';
 
 import '../theme/category_colors.dart';
 import '../theme/design_tokens.dart';
+import '../utils/date_format_fr.dart';
 import 'score_badge.dart';
-
-const List<String> _monthLabelsFr = <String>[
-  'janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin',
-  'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.',
-];
-
-String _formatDayLabel(DateTime date) => '${date.day} ${_monthLabelsFr[date.month - 1]}';
 
 /// Ligne d'un jour dans l'écran Historique : date, mini-barres de
 /// répartition par catégorie proportionnelles, total et [ScoreBadge].
@@ -30,7 +24,8 @@ class HistoryDayItem extends StatelessWidget {
     final date = DateTime.parse(dayStats.date);
     final hours = dayStats.totalMin ~/ 60;
     final minutes = dayStats.totalMin % 60;
-    final activityLabel = dayStats.activitiesCount > 1 ? 'activités' : 'activité';
+    final activityLabel =
+        dayStats.activitiesCount > 1 ? 'activités' : 'activité';
 
     return InkWell(
       onTap: onTap,
@@ -49,7 +44,7 @@ class HistoryDayItem extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(_formatDayLabel(date), style: textTheme.titleMedium),
+                  Text(formatDayLabel(date), style: textTheme.titleMedium),
                   const SizedBox(height: 8),
                   _CategoryDots(byCategory: dayStats.byCategory),
                   const SizedBox(height: 8),

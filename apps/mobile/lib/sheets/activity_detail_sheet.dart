@@ -30,7 +30,8 @@ class ActivityDetailSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final visual = categoryVisualFor(activity.category, Theme.of(context).brightness);
+    final visual =
+        categoryVisualFor(activity.category, Theme.of(context).brightness);
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
 
@@ -54,7 +55,10 @@ class ActivityDetailSheet extends ConsumerWidget {
                   children: [
                     Text(activity.title, style: textTheme.headlineMedium),
                     const SizedBox(height: 6),
-                    _CategoryBadge(emoji: visual.emoji, label: visual.label, color: visual.color),
+                    _CategoryBadge(
+                        emoji: visual.emoji,
+                        label: visual.label,
+                        color: visual.color),
                   ],
                 ),
               ),
@@ -64,20 +68,26 @@ class ActivityDetailSheet extends ConsumerWidget {
           Row(
             children: [
               Expanded(
-                child: _InfoCard(label: 'Début', value: _timeFormat.format(activity.startTime)),
+                child: _InfoCard(
+                    label: 'Début',
+                    value: _timeFormat.format(activity.startTime)),
               ),
               const SizedBox(width: 10),
               Expanded(
                 child: _InfoCard(
                   label: 'Fin',
-                  value: activity.endTime == null ? 'en cours' : _timeFormat.format(activity.endTime!),
+                  value: activity.endTime == null
+                      ? 'en cours'
+                      : _timeFormat.format(activity.endTime!),
                 ),
               ),
               const SizedBox(width: 10),
               Expanded(
                 child: _InfoCard(
                   label: 'Durée',
-                  value: activity.durationMin == null ? '—' : formatDurationLabel(activity.durationMin!),
+                  value: activity.durationMin == null
+                      ? '—'
+                      : formatDurationLabel(activity.durationMin!),
                 ),
               ),
             ],
@@ -93,21 +103,24 @@ class ActivityDetailSheet extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
           ],
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton(
-              onPressed: () => _edit(context),
-              child: const Text('Modifier'),
-            ),
-          ),
-          const SizedBox(height: 12),
-          SizedBox(
-            width: double.infinity,
-            child: TextButton(
-              onPressed: () => _delete(context, ref),
-              style: TextButton.styleFrom(foregroundColor: colorScheme.error),
-              child: const Text('Supprimer'),
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => _edit(context),
+                  child: const Text('Modifier'),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: TextButton(
+                  onPressed: () => _delete(context, ref),
+                  style:
+                      TextButton.styleFrom(foregroundColor: colorScheme.error),
+                  child: const Text('Supprimer'),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -121,7 +134,8 @@ class ActivityDetailSheet extends ConsumerWidget {
       if (context.mounted) Navigator.of(context).pop();
     } on ActivityValidationException catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.toString())));
       }
     }
   }
@@ -136,7 +150,8 @@ class ActivityDetailSheet extends ConsumerWidget {
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text("Supprimer l'activité ?"),
-        content: const Text('Cette action est définitive et ne peut pas être annulée.'),
+        content: const Text(
+            'Cette action est définitive et ne peut pas être annulée.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
@@ -144,7 +159,8 @@ class ActivityDetailSheet extends ConsumerWidget {
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            style: TextButton.styleFrom(foregroundColor: Theme.of(dialogContext).colorScheme.error),
+            style: TextButton.styleFrom(
+                foregroundColor: Theme.of(dialogContext).colorScheme.error),
             child: const Text('Supprimer'),
           ),
         ],
@@ -158,7 +174,8 @@ class ActivityDetailSheet extends ConsumerWidget {
 }
 
 class _CategoryBadge extends StatelessWidget {
-  const _CategoryBadge({required this.emoji, required this.label, required this.color});
+  const _CategoryBadge(
+      {required this.emoji, required this.label, required this.color});
 
   final String emoji;
   final String label;

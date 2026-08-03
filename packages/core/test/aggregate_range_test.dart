@@ -27,7 +27,8 @@ void main() {
       expect(range.daysTracked, 3);
     });
 
-    test('fenêtre de 7 jours glissants avec seulement 3 jours suivis (RG-07)', () {
+    test('fenêtre de 7 jours glissants avec seulement 3 jours suivis (RG-07)',
+        () {
       // La fenêtre demandée (7 jours) n'est pas modélisée ici : c'est le
       // DAO qui borne la requête SQL. Le nombre de jours *suivis* reflète
       // uniquement les données reçues.
@@ -98,6 +99,50 @@ void main() {
       expect(range.daysTracked, 0);
       expect(range.totalMin, 0);
       expect(range.averageScore, 0.0);
+    });
+  });
+
+  group('mergeByCategory', () {
+    test(
+        'somme les minutes par catégorie sur plusieurs jours qui se chevauchent',
+        () {
+      final days = [
+        computeDayStats(
+          date: '2026-08-01',
+          minutesByCategory: {CategoryId.work: 100, CategoryId.sport: 30},
+          activitiesCount: 2,
+        ),
+        computeDayStats(
+          date: '2026-08-02',
+          minutesByCategory: {CategoryId.work: 20, CategoryId.sleep: 480},
+          activitiesCount: 2,
+        ),
+      ];
+
+      final merged = mergeByCategory(days);
+
+      expect(merged, {
+        CategoryId.work: 120,
+        CategoryId.sport: 30,
+        CategoryId.sleep: 480,
+      });
+    });
+
+    test('liste vide → map vide', () {
+      expect(mergeByCategory(const []), isEmpty);
+    });
+
+    test('un seul jour sans chevauchement → reprend simplement sa répartition',
+        () {
+      final days = [
+        computeDayStats(
+          date: '2026-08-01',
+          minutesByCategory: {CategoryId.leisure: 45},
+          activitiesCount: 1,
+        ),
+      ];
+
+      expect(mergeByCategory(days), {CategoryId.leisure: 45});
     });
   });
 }
