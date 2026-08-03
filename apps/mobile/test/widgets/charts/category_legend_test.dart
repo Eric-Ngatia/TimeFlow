@@ -29,6 +29,28 @@ void main() {
     expect(find.text('25%'), findsOneWidget);
   });
 
+  testWidgets(
+      'affiche Formation et Projet perso sans exception (RG-06, nouvelles catégories)',
+      (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        home: const Scaffold(
+          body: CategoryLegend(
+            minutesByCategory: <CategoryId, int>{
+              CategoryId.study: 30,
+              CategoryId.side_project: 30,
+            },
+          ),
+        ),
+      ),
+    );
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('Formation'), findsOneWidget);
+    expect(find.text('Projet perso'), findsOneWidget);
+  });
+
   testWidgets('masque le pourcentage quand showPercentage est false',
       (tester) async {
     await tester.pumpWidget(

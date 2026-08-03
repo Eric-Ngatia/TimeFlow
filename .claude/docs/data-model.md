@@ -22,7 +22,17 @@ class Activities extends Table {
 Index recommandé : `CREATE INDEX idx_activities_date ON activities(date);`
 
 ## CategoryId (enum Dart, `packages/domain`)
-work 💼 · sport 🏃 · leisure 🎮 · sleep 😴 · social 💬 · other 📦
+
+| Catégorie | Emoji | `isProductive` (RG-06) |
+|---|---|---|
+| `work` | 💼 | oui |
+| `study` | 📚 | oui |
+| `side_project` | 🛠️ | oui |
+| `sport` | 🏃 | non |
+| `leisure` | 🎮 | non |
+| `sleep` | 😴 | non |
+| `social` | 💬 | non |
+| `other` | 📦 | non |
 
 ## DayStats (calculé en Dart depuis une requête agrégée — jamais stocké, RG-07)
 - `date`: String (YYYY-MM-DD)

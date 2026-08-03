@@ -39,6 +39,51 @@ void main() {
     expect(find.text('Aucune donnée'), findsOneWidget);
   });
 
+  testWidgets(
+      'se rend sans exception avec study et side_project (RG-06, nouvelles catégories)',
+      (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        home: const Scaffold(
+          body: CategoryDonutChart(
+            minutesByCategory: <CategoryId, int>{
+              CategoryId.study: 30,
+              CategoryId.side_project: 30,
+            },
+          ),
+        ),
+      ),
+    );
+
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('se rend sans exception avec les 8 catégories ensemble',
+      (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        home: const Scaffold(
+          body: CategoryDonutChart(
+            minutesByCategory: <CategoryId, int>{
+              CategoryId.work: 60,
+              CategoryId.study: 30,
+              CategoryId.side_project: 30,
+              CategoryId.sport: 30,
+              CategoryId.leisure: 30,
+              CategoryId.sleep: 60,
+              CategoryId.social: 30,
+              CategoryId.other: 30,
+            },
+          ),
+        ),
+      ),
+    );
+
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('affiche centerLabel par-dessus le donut sans exception',
       (tester) async {
     await tester.pumpWidget(

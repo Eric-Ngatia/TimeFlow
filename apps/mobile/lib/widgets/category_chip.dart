@@ -90,9 +90,13 @@ class CategoryChip extends StatelessWidget {
           children: [
             Text(emoji, style: const TextStyle(fontSize: 18)),
             const SizedBox(width: 6),
-            Text(
-              label,
-              style: textTheme.titleSmall?.copyWith(color: textColor),
+            Flexible(
+              child: Text(
+                label,
+                style: textTheme.titleSmall?.copyWith(color: textColor),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ],
         ),

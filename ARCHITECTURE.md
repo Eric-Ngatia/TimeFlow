@@ -134,10 +134,10 @@ timeflow-flutter/                          # racine du monorepo
 │   │           │   └── duration.dart           # RG-04 (durationMin, cap 1440)
 │   │           ├── stats/
 │   │           │   ├── compute_day_stats.dart  # RG-05, RG-06
-│   │           │   ├── productivity_score.dart # RG-06 (work/total, seuil 60%)
+│   │           │   ├── productivity_score.dart # RG-06 (Σ catégories productives/total, seuil 60%)
 │   │           │   └── aggregate_range.dart    # RG-07 (7j / 30j glissants)
 │   │           └── constants/
-│   │               └── categories.dart         # 6 catégories (id, label, emoji, couleur)
+│   │               └── categories.dart         # 8 catégories (id, label, emoji, couleur, isProductive)
 │   │   └── test/                           # dart test — 100% sur la logique métier
 │   │       ├── duration_test.dart
 │   │       ├── productivity_score_test.dart
@@ -235,7 +235,7 @@ Un hook `PreToolUse` (dans `settings.json`) bloque les écritures de fichiers `.
 | RG-03 | Activité « en cours » (endTime null) | `core/src/activities/create_activity.dart` + `close_activity.dart` | ✅ |
 | RG-04 | Durée auto = fin − début, cap 1440 | `core/src/activities/duration.dart` | ✅ |
 | RG-05 | Données par jour, colonne `date` indexée | `apps/mobile/lib/data/activities_dao.dart` | ✅ |
-| RG-06 | Score = travail/total, seuil 60% | `core/src/stats/productivity_score.dart` | ✅ |
+| RG-06 | Score = Σ(catégories productives)/total, seuil 60% | `core/src/stats/productivity_score.dart` | ✅ |
 | RG-07 | Hebdo = 7j, mensuel = 30j glissants, agrégation SQL | `core/src/stats/aggregate_range.dart` + requête drift | ✅ |
 | RG-08 | Édition/suppression (confirmation) | `apps/mobile/lib/data/activities_dao.dart` + UI sheet | ✅ |
 

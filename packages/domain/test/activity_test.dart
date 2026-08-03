@@ -3,12 +3,14 @@ import 'package:timeflow_domain/timeflow_domain.dart';
 
 void main() {
   group('CategoryId', () {
-    test('expose exactement les 6 catégories du MVP', () {
-      expect(CategoryId.values, hasLength(6));
+    test('expose exactement les 8 catégories du MVP', () {
+      expect(CategoryId.values, hasLength(8));
       expect(
         CategoryId.values,
         containsAll(<CategoryId>[
           CategoryId.work,
+          CategoryId.study,
+          CategoryId.side_project,
           CategoryId.sport,
           CategoryId.leisure,
           CategoryId.sleep,

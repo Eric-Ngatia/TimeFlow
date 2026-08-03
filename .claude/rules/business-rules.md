@@ -13,7 +13,7 @@ paths:
 - **RG-03** — Activité « en cours » autorisée (`endTime` = null). Indicateur visuel, clôturable à tout moment.
 - **RG-04** — `durationMin` = (fin − début) en minutes, arrondi. Total journalier ≤ 1440 min.
 - **RG-05** — Données par jour. Colonne `date` (TEXT, `YYYY-MM-DD`) indexée dans la table `activities`.
-- **RG-06** — Score de productivité = temps `work` / total journalier (%). ≥ 60 % ⇒ journée productive. Badge coloré.
+- **RG-06** — Score de productivité = Σ minutes des catégories productives (`work`, `study`, `side_project`) / total journalier (%). ≥ 60 % ⇒ journée productive. Badge coloré.
 - **RG-07** — Bilan hebdo = 7 derniers jours glissants ; mensuel = 30. Agrégation **via requête SQL** (drift, `SUM` + `GROUP BY`), aucun pré-calcul stocké.
 - **RG-08** — Toute activité éditable (titre, catégorie, heures) et supprimable (avec confirmation ; suppression définitive).
 

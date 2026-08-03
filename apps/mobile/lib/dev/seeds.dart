@@ -30,18 +30,21 @@ const List<_SeedEntry> _entries = <_SeedEntry>[
   _SeedEntry(daysAgo: 4, hour: 14, minute: 0, durationMin: 180, category: CategoryId.work, title: 'Réunion client'),
   _SeedEntry(daysAgo: 4, hour: 18, minute: 0, durationMin: 60, category: CategoryId.sport, title: 'Course à pied'),
   _SeedEntry(daysAgo: 4, hour: 20, minute: 0, durationMin: 90, category: CategoryId.leisure, title: 'Film du soir'),
+  _SeedEntry(daysAgo: 4, hour: 22, minute: 0, durationMin: 60, category: CategoryId.study, title: 'Cours cybersécurité'),
 
   // J-3
   _SeedEntry(daysAgo: 3, hour: 8, minute: 0, durationMin: 240, category: CategoryId.work, title: 'Sprint planning'),
   _SeedEntry(daysAgo: 3, hour: 12, minute: 0, durationMin: 60, category: CategoryId.other, title: 'Courses'),
   _SeedEntry(daysAgo: 3, hour: 13, minute: 30, durationMin: 210, category: CategoryId.work, title: 'Revue de code'),
   _SeedEntry(daysAgo: 3, hour: 19, minute: 0, durationMin: 45, category: CategoryId.sport, title: 'Yoga'),
+  _SeedEntry(daysAgo: 3, hour: 20, minute: 0, durationMin: 90, category: CategoryId.study, title: 'Certification cloud'),
 
   // J-2
   _SeedEntry(daysAgo: 2, hour: 9, minute: 0, durationMin: 300, category: CategoryId.work, title: 'Développement API'),
   _SeedEntry(daysAgo: 2, hour: 15, minute: 0, durationMin: 60, category: CategoryId.social, title: 'Appel famille'),
   _SeedEntry(daysAgo: 2, hour: 17, minute: 0, durationMin: 90, category: CategoryId.leisure, title: 'Lecture'),
   _SeedEntry(daysAgo: 2, hour: 21, minute: 0, durationMin: 40, category: CategoryId.sport, title: 'Étirements'),
+  _SeedEntry(daysAgo: 2, hour: 22, minute: 0, durationMin: 75, category: CategoryId.side_project, title: 'Dev app perso'),
 
   // J-1
   _SeedEntry(daysAgo: 1, hour: 8, minute: 30, durationMin: 210, category: CategoryId.work, title: 'Design système'),
@@ -49,6 +52,7 @@ const List<_SeedEntry> _entries = <_SeedEntry>[
   _SeedEntry(daysAgo: 1, hour: 13, minute: 30, durationMin: 240, category: CategoryId.work, title: 'Intégration drift'),
   _SeedEntry(daysAgo: 1, hour: 18, minute: 30, durationMin: 60, category: CategoryId.sport, title: 'Natation'),
   _SeedEntry(daysAgo: 1, hour: 20, minute: 0, durationMin: 60, category: CategoryId.social, title: 'Dîner entre amis'),
+  _SeedEntry(daysAgo: 1, hour: 21, minute: 15, durationMin: 90, category: CategoryId.side_project, title: 'Refonte site web'),
 
   // Aujourd'hui — la dernière entrée (durationMin: null) reste « en cours »
   // (RG-03) pour visualiser CurrentActivityCard.
@@ -57,7 +61,7 @@ const List<_SeedEntry> _entries = <_SeedEntry>[
   _SeedEntry(daysAgo: 0, hour: 13, minute: 30, durationMin: null, category: CategoryId.work, title: 'Développement écrans TimeFlow'),
 ];
 
-/// Insère des activités de démonstration variées (6 catégories, 5 jours)
+/// Insère des activités de démonstration variées (8 catégories, 5 jours)
 /// via le [repository] — jamais de SQL brut — pour visualiser la
 /// chronologie, les graphiques et l'historique sans saisie manuelle.
 ///

@@ -23,6 +23,7 @@ void main() {
     );
     await tester.pump();
 
+    await tester.ensureVisible(find.text('Enregistrer'));
     await tester.tap(find.text('Enregistrer'));
     await tester.pump();
 
@@ -45,6 +46,7 @@ void main() {
     await tester.pump();
 
     await tester.enterText(find.byType(TextField), 'Réunion');
+    await tester.ensureVisible(find.text('Enregistrer'));
     await tester.tap(find.text('Enregistrer'));
     await tester.pump();
 
@@ -81,6 +83,7 @@ void main() {
     await tester.tap(find.text('Travail'));
     await tester.pump();
 
+    await tester.ensureVisible(find.text('Enregistrer'));
     await tester.tap(find.text('Enregistrer'));
     await tester.pumpAndSettle();
 
