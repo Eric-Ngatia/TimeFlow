@@ -22,6 +22,8 @@ class CategoryVisual {
 
 const Map<CategoryId, Color> _lightCategoryColors = <CategoryId, Color>{
   CategoryId.work: Color(0xFF185FA5),
+  CategoryId.study: Color(0xFF3F51B5),
+  CategoryId.side_project: Color(0xFFD84315),
   CategoryId.sport: Color(0xFF0F6E56),
   CategoryId.leisure: Color(0xFF534AB7),
   CategoryId.sleep: Color(0xFF0E7490),
@@ -31,6 +33,8 @@ const Map<CategoryId, Color> _lightCategoryColors = <CategoryId, Color>{
 
 const Map<CategoryId, Color> _darkCategoryColors = <CategoryId, Color>{
   CategoryId.work: Color(0xFF5AA0E6),
+  CategoryId.study: Color(0xFF8C9EFF),
+  CategoryId.side_project: Color(0xFFFF8A65),
   CategoryId.sport: Color(0xFF38C39C),
   CategoryId.leisure: Color(0xFF9A90F0),
   CategoryId.sleep: Color(0xFF45C0DC),

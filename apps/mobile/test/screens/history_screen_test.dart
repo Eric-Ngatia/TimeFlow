@@ -55,11 +55,15 @@ void main() {
     expect(find.text('Aucune activité.'), findsNothing);
 
     // Filtrer sur une catégorie absente (Sommeil) : aucun résultat.
+    await tester.drag(find.byType(ListView).first, const Offset(-500, 0));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Sommeil'));
     await tester.pumpAndSettle();
     expect(find.text('Aucune activité.'), findsOneWidget);
 
     // Revenir à « Tout » : le jour réapparaît.
+    await tester.drag(find.byType(ListView).first, const Offset(500, 0));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Tout'));
     await tester.pumpAndSettle();
     expect(find.text('Aucune activité.'), findsNothing);

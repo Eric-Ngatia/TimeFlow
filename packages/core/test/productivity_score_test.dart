@@ -8,8 +8,33 @@ void main() {
       expect(productivityScore({CategoryId.work: 120}), 100);
     });
 
-    test('0% quand aucune minute en work', () {
+    test('0% quand aucune catégorie productive (neutre seul)', () {
       expect(productivityScore({CategoryId.sport: 60, CategoryId.sleep: 60}), 0);
+    });
+
+    test('additionne work et study (catégories productives)', () {
+      // total 100, productif work(40) + study(40) = 80 → 80%
+      expect(
+        productivityScore({
+          CategoryId.work: 40,
+          CategoryId.study: 40,
+          CategoryId.sport: 20,
+        }),
+        80,
+      );
+    });
+
+    test('additionne work, study et side_project (les trois catégories productives)', () {
+      // total 120, productif work(30) + study(30) + side_project(30) = 90 → 75%
+      expect(
+        productivityScore({
+          CategoryId.work: 30,
+          CategoryId.study: 30,
+          CategoryId.side_project: 30,
+          CategoryId.sleep: 30,
+        }),
+        75,
+      );
     });
 
     test('arrondit le pourcentage', () {

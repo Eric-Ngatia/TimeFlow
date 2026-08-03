@@ -1,8 +1,12 @@
 /// Catégories d'activités disponibles dans TimeFlow.
 ///
-/// Ces 6 valeurs sont fixes pour le MVP (voir `.claude/docs/data-model.md`).
+/// Ces 8 valeurs sont fixes pour le MVP (voir `.claude/docs/data-model.md`).
+/// `work`, `study` et `side_project` sont les catégories productives au sens
+/// de RG-06 (voir `packages/core/lib/src/constants/categories.dart`).
 enum CategoryId {
   work,
+  study,
+  side_project,
   sport,
   leisure,
   sleep,
