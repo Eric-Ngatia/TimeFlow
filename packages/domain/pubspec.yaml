@@ -1,0 +1,12 @@
+name: timeflow_domain
+description: Types et contrats partagés de TimeFlow (Activity, CategoryId, ActivityRepository). Dart pur.
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ^3.4.0
+  # Pas de contrainte "flutter" ici : ce package NE DOIT JAMAIS dépendre de Flutter.
+
+dev_dependencies:
+  lints: ^4.0.0
+  test: ^1.25.0

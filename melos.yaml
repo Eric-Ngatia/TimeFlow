@@ -1,0 +1,30 @@
+name: timeflow
+
+packages:
+  - apps/**
+  - packages/**
+
+command:
+  version:
+    workspaceChangelog: false
+
+scripts:
+  analyze:
+    run: melos exec -- "dart analyze --fatal-infos"
+    description: Analyse statique sur tous les packages.
+
+  format:
+    run: melos exec -- "dart format --set-exit-if-changed ."
+    description: Vérifie le formatage sur tous les packages.
+
+  test:
+    run: melos exec --dir-exists=test -- "dart test || flutter test"
+    description: Lance les tests (dart test pour les packages purs, flutter test pour apps/mobile).
+
+  test:core:
+    run: melos exec --scope="timeflow_core" -- "dart test"
+    description: Tests ciblés sur la logique métier.
+
+  build_runner:
+    run: melos exec --dir-exists=pubspec.yaml -- "dart run build_runner build --delete-conflicting-outputs"
+    description: Génère les fichiers *.g.dart (drift) sur tous les packages concernés.

@@ -1,0 +1,77 @@
+name: timeflow_mobile
+description: TimeFlow — tracker de temps personnel, offline-first (Flutter + SQLite).
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ^3.4.0
+  flutter: ">=3.22.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Packages internes du monorepo
+  timeflow_domain:
+    path: ../../packages/domain
+  timeflow_core:
+    path: ../../packages/core
+
+  # Base de données locale
+  drift: ^2.19.0
+  sqlite3_flutter_libs: ^0.5.0
+  path_provider: ^2.1.0
+  path: ^1.9.0
+
+  # State management
+  flutter_riverpod: ^2.5.0
+
+  # Navigation
+  go_router: ^14.0.0
+
+  # Graphiques
+  fl_chart: ^0.68.0
+
+  # Utilitaires
+  uuid: ^4.4.0
+  intl: ^0.19.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  build_runner: ^2.4.0
+  drift_dev: ^2.19.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/fonts/
+  fonts:
+    # Polices statiques locales (licence SIL Open Font License), pas
+    # `google_fonts` : l'app est offline-first, aucun téléchargement de
+    # police à l'exécution.
+    - family: Playfair Display
+      fonts:
+        - asset: assets/fonts/PlayfairDisplay-VariableFont_wght.ttf
+          weight: 400
+        - asset: assets/fonts/PlayfairDisplay-VariableFont_wght.ttf
+          weight: 500
+        - asset: assets/fonts/PlayfairDisplay-VariableFont_wght.ttf
+          weight: 600
+        - asset: assets/fonts/PlayfairDisplay-VariableFont_wght.ttf
+          weight: 700
+    - family: DM Sans
+      fonts:
+        - asset: assets/fonts/DMSans-VariableFont_opsz,wght.ttf
+          weight: 400
+        - asset: assets/fonts/DMSans-VariableFont_opsz,wght.ttf
+          weight: 500
+        - asset: assets/fonts/DMSans-VariableFont_opsz,wght.ttf
+          weight: 700
+    - family: DM Mono
+      fonts:
+        - asset: assets/fonts/DMMono-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/DMMono-Medium.ttf
+          weight: 500

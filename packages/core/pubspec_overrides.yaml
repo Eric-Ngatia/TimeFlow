@@ -1,0 +1,4 @@
+# melos_managed_dependency_overrides: timeflow_domain
+dependency_overrides:
+  timeflow_domain:
+    path: ..\\domain

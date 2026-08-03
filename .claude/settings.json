@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "deny": [
+      "Read(./**/build/**)",
+      "Read(./**/.dart_tool/**)",
+      "Read(./**/*.g.dart)",
+      "Read(./**/*.freezed.dart)"
+    ]
+  },
+  "enabledPlugins": {},
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "test -d .plans && ls .plans/*.md >/dev/null 2>&1 || echo 'RAPPEL: aucun plan trouve dans .plans/. Passe par /plan avant d ecrire du code (workflow Plan -> Exec -> Review).' >&2; exit 0"
+          }
+        ]
+      }
+    ]
+  }
+}

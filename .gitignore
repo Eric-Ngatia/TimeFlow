@@ -1,0 +1,14 @@
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+*.g.dart
+*.freezed.dart
+.plans/
+.claude/settings.local.json
+.claude/scheduled_tasks.lock
+*.log
+coverage/
+# Note : pubspec.lock est commité pour apps/mobile (bonne pratique Flutter),
+# mais peut être ignoré dans packages/* purs si tu préfères des ranges de versions.

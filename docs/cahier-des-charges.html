@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TimeFlow — Cahier des charges (Flutter)</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary:   #1A3A5C;
+  --primary-l: #E6F0FA;
+  --primary-d: #0D2236;
+  --gold:      #c9a96e;
+  --gold-l:    #f5e6c8;
+  --cream:     #F7F6F2;
+  --muted:     #6B7280;
+  --blue:      #185FA5;  --blue-l:   #E6F1FB;
+  --green:     #0F6E56;  --green-l:  #E1F5EE;
+  --pink:      #D4537E;  --pink-l:   #FBEAF0;
+  --purple:    #534AB7;  --purple-l: #EEEDFE;
+  --orange:    #854F0B;  --orange-l: #FAEEDA;
+  --teal:      #0e7490;  --teal-l:   #e0f2fe;
+  --red:       #A32D2D;  --red-l:    #FCEBEB;
+  --ink:       #1C1B1A;
+  --border:    #E2DFD8;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* COVER */
+.cover {
+  background: linear-gradient(135deg, var(--primary-d) 0%, var(--primary) 60%, #2563A0 100%);
+  color: white;
+  padding: 80px 60px;
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.cover::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -80px;
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+}
+.cover::after {
+  content: '';
+  position: absolute;
+  bottom: -60px; left: 200px;
+  width: 280px; height: 280px;
+  border-radius: 50%;
+  background: rgba(201,169,110,0.1);
+}
+.cover-inner { max-width: 820px; position: relative; z-index: 1; }
+.cover-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--gold);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.cover-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 12px;
+  letter-spacing: -0.02em;
+}
+.cover-title span { color: var(--gold); }
+.cover-sub {
+  font-size: 20px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.75);
+  margin-bottom: 24px;
+}
+.cover-desc {
+  font-size: 15px;
+  color: rgba(255,255,255,0.6);
+  max-width: 560px;
+  line-height: 1.8;
+  margin-bottom: 36px;
+}
+.pill-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.pill {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-weight: 500;
+}
+.pill-g { background: rgba(255,255,255,0.12); color: white; border: 1px solid rgba(255,255,255,0.2); }
+.pill-w { background: var(--gold); color: var(--primary-d); }
+
+/* LAYOUT */
+.page { max-width: 960px; margin: 0 auto; padding: 60px 40px; }
+
+/* SECTION HEADER */
+.section { margin-bottom: 60px; }
+.section-header { display: flex; align-items: baseline; gap: 20px; margin-bottom: 32px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+.section-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  color: var(--primary);
+  font-weight: 500;
+  min-width: 28px;
+}
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.section-sub {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* CARD GRIDS */
+.card-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.card-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+.card-grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; }
+
+.card {
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid var(--border);
+  background: white;
+}
+.card-icon { font-size: 24px; margin-bottom: 12px; }
+.card-title { font-weight: 600; font-size: 15px; margin-bottom: 8px; }
+.card-text { font-size: 13.5px; color: var(--muted); line-height: 1.6; }
+.card-list { list-style: none; padding: 0; margin-top: 10px; }
+.card-list li { font-size: 13px; color: var(--muted); padding: 3px 0; display: flex; align-items: flex-start; gap: 8px; }
+.card-list li::before { content: '›'; color: var(--primary); font-weight: 600; margin-top: 1px; }
+
+/* COLOR VARIANTS */
+.c-primary { background: var(--primary-l); border-color: #C5D8EF; }
+.c-primary .card-title { color: var(--primary-d); }
+.c-green { background: var(--green-l); border-color: #A0D9C8; }
+.c-green .card-title { color: var(--green); }
+.c-blue { background: var(--blue-l); border-color: #B5D4F4; }
+.c-blue .card-title { color: var(--blue); }
+.c-purple { background: var(--purple-l); border-color: #CECBF6; }
+.c-purple .card-title { color: var(--purple); }
+.c-orange { background: var(--orange-l); border-color: #FAC775; }
+.c-orange .card-title { color: var(--orange); }
+.c-pink { background: var(--pink-l); border-color: #F4C0D1; }
+.c-pink .card-title { color: var(--pink); }
+.c-teal { background: var(--teal-l); border-color: #A5D8E8; }
+.c-teal .card-title { color: var(--teal); }
+.c-gold { background: var(--gold-l); border-color: #E8CC98; }
+.c-gold .card-title { color: #7A5C1A; }
+.c-red { background: var(--red-l); border-color: #F7C1C1; }
+.c-red .card-title { color: var(--red); }
+
+/* INFOBOX */
+.infobox {
+  border-left: 4px solid var(--primary);
+  background: var(--primary-l);
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin-top: 20px;
+  font-size: 13.5px;
+  color: var(--primary-d);
+}
+.infobox strong { font-weight: 600; }
+
+/* FLOW */
+.flow { display: flex; align-items: flex-start; gap: 0; margin-top: 8px; flex-wrap: wrap; }
+.flow-step {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 16px;
+  width: 150px;
+  min-width: 140px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.flow-step-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--primary);
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+.flow-step-label { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+.flow-step-sub { font-size: 11px; color: var(--muted); }
+.flow-arrow {
+  display: flex;
+  align-items: center;
+  padding: 0 6px;
+  color: var(--primary);
+  font-size: 20px;
+  flex-shrink: 0;
+  margin-top: 28px;
+}
+
+/* RULES */
+.rule {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  border-radius: 8px;
+  padding: 14px 18px;
+  border-left: 4px solid;
+  margin-bottom: 12px;
+}
+.rule-code {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  min-width: 52px;
+  padding-top: 2px;
+}
+.rule-text { font-size: 13.5px; line-height: 1.6; }
+.rule-text code {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  background: rgba(0,0,0,0.07);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+/* STACK TABLE */
+.stack-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.stack-table th {
+  background: var(--primary);
+  color: white;
+  padding: 10px 16px;
+  text-align: left;
+  font-weight: 500;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.stack-table th:first-child { border-radius: 8px 0 0 0; }
+.stack-table th:last-child { border-radius: 0 8px 0 0; }
+.stack-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink);
+}
+.stack-table tr:last-child td { border-bottom: none; }
+.stack-table tr:nth-child(even) td { background: var(--cream); }
+.stack-table td:first-child { font-weight: 600; color: var(--primary); }
+.tech-badge {
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  background: var(--primary-l);
+  color: var(--primary-d);
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-weight: 500;
+}
+
+/* TREE */
+.tree {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  line-height: 2;
+}
+.folder { color: var(--primary); font-weight: 500; }
+.file { color: var(--muted); }
+.comment { color: #B0A99A; font-style: italic; }
+
+/* PLANNING */
+.phase { margin-bottom: 20px; }
+.phase-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.phase-name { font-weight: 600; font-size: 14px; }
+.phase-dur { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; }
+.phase-bar-bg { background: var(--border); border-radius: 999px; height: 8px; }
+.phase-bar { height: 8px; border-radius: 999px; }
+.phase-desc { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
+
+/* ENV CARDS */
+.env-card {
+  background: #1C1B1A;
+  color: #E8E4DC;
+  border-radius: 10px;
+  padding: 20px 24px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12.5px;
+  line-height: 2;
+}
+.env-comment { color: #6B7280; }
+.env-key { color: var(--gold); }
+.env-val { color: #9FE1CB; }
+
+/* SCREEN MOCKUP LABELS */
+.screen-label {
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  background: var(--primary);
+  color: white;
+  border-radius: 4px;
+  padding: 2px 8px;
+  margin-bottom: 8px;
+}
+
+/* BADGE */
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  font-family: 'DM Mono', monospace;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+.badge-green { background: var(--green-l); color: var(--green); }
+.badge-orange { background: var(--orange-l); color: var(--orange); }
+.badge-red { background: var(--red-l); color: var(--red); }
+.badge-blue { background: var(--blue-l); color: var(--blue); }
+
+@media print {
+  body { background: white; }
+  .cover { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-inner">
+    <div class="cover-tag">Cahier des charges technique · Version 2.0 (Flutter) · Août 2026</div>
+    <div class="cover-title">Time<span>Flow</span></div>
+    <div class="cover-sub">Tracker de temps personnel — Application Mobile 100% offline</div>
+    <div class="cover-desc">
+      Application Flutter permettant d'enregistrer chaque activité du quotidien (titre, catégorie, heure de début et de fin), de visualiser en temps réel sa journée, et d'obtenir des bilans hebdomadaires et mensuels avec graphiques comparatifs pour évaluer sa productivité. Toutes les données vivent dans une base SQLite embarquée sur l'appareil — aucune connexion requise.
+    </div>
+    <div class="pill-row">
+      <span class="pill pill-g">Flutter</span>
+      <span class="pill pill-g">Dart</span>
+      <span class="pill pill-g">SQLite (drift)</span>
+      <span class="pill pill-g">Riverpod</span>
+      <span class="pill pill-g">fl_chart</span>
+      <span class="pill pill-w">Offline First</span>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- 01 CONTEXTE -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <div>
+        <div class="section-title">Contexte & Objectifs</div>
+        <div class="section-sub">Pourquoi cette application, et ce qu'elle résout concrètement</div>
+      </div>
+    </div>
+    <div class="card-grid-2">
+      <div class="card c-primary">
+        <div class="card-icon">🎯</div>
+        <div class="card-title">Situation actuelle</div>
+        <div class="card-text">Il est difficile de savoir objectivement à quoi on passe réellement son temps chaque jour. Les journées passent sans trace, et on ne peut pas identifier les patterns de productivité ni les pertes de temps récurrentes.</div>
+      </div>
+      <div class="card c-green">
+        <div class="card-icon">✅</div>
+        <div class="card-title">Ce que TimeFlow résout</div>
+        <div class="card-text">TimeFlow permet d'enregistrer chaque activité en temps réel, de la catégoriser, et de générer automatiquement des bilans visuels. L'utilisateur peut comparer ses journées et identifier ses pics de productivité.</div>
+      </div>
+    </div>
+    <div class="infobox">
+      <strong>Vision produit :</strong> Une app légère, rapide à saisir, sans compte ni connexion. Tout est local. L'objectif est que l'enregistrement d'une activité prenne moins de 10 secondes.
+    </div>
+  </div>
+
+  <!-- 02 UTILISATEURS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <div>
+        <div class="section-title">Utilisateurs & Espaces</div>
+        <div class="section-sub">Profils cibles et périmètre fonctionnel</div>
+      </div>
+    </div>
+    <div class="card-grid-2">
+      <div class="card c-pink">
+        <div class="card-icon">👤</div>
+        <div class="card-title">Utilisateur principal</div>
+        <div class="card-text">Une seule personne — l'utilisateur de l'app. Pas de système multi-utilisateur ni de compte. L'app est 100% personnelle et locale.</div>
+        <ul class="card-list">
+          <li>Enregistre ses activités au fil de la journée</li>
+          <li>Consulte ses statistiques</li>
+          <li>Compare ses journées et semaines</li>
+          <li>Identifie ses patterns de productivité</li>
+        </ul>
+      </div>
+      <div class="card c-teal">
+        <div class="card-icon">📱</div>
+        <div class="card-title">Environnement d'usage</div>
+        <div class="card-text">Application mobile exclusivement. L'utilisateur ouvre l'app pour saisir rapidement ce qu'il commence ou termine. Usage fréquent tout au long de la journée.</div>
+        <ul class="card-list">
+          <li>iOS & Android via un seul codebase Flutter</li>
+          <li>Offline-first (pas d'internet requis)</li>
+          <li>Saisie rapide (&lt; 10 secondes)</li>
+          <li>Consultation du soir / weekend</li>
+        </ul>
+      </div>
+    </div>
+    <div class="infobox" style="border-color: var(--teal); background: var(--teal-l); color: var(--teal);">
+      <strong>Architecture locale :</strong> Toutes les données sont stockées dans une base <strong>SQLite embarquée</strong> sur l'appareil (via drift). Aucun backend, aucun serveur, aucune connexion réseau requise pour utiliser l'app.
+    </div>
+  </div>
+
+  <!-- 03 MODULES FONCTIONNELS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <div>
+        <div class="section-title">Modules Fonctionnels</div>
+        <div class="section-sub">Les 6 blocs fonctionnels de l'application</div>
+      </div>
+    </div>
+    <div class="card-grid-3">
+      <div class="card c-primary">
+        <div class="card-icon">➕</div>
+        <div class="card-title">M1 — Saisie d'activité</div>
+        <div class="card-text">Formulaire rapide : titre, catégorie, heure de début. Heure de fin saisie à la clôture de l'activité.</div>
+      </div>
+      <div class="card c-green">
+        <div class="card-icon">📋</div>
+        <div class="card-title">M2 — Journal du jour</div>
+        <div class="card-text">Liste chronologique des activités de la journée. Timeline visuelle avec durée calculée automatiquement.</div>
+      </div>
+      <div class="card c-blue">
+        <div class="card-icon">🏷️</div>
+        <div class="card-title">M3 — Catégories</div>
+        <div class="card-text">6 catégories prédéfinies colorées : Travail, Sport, Loisirs, Sommeil, Social, Autre. Chacune avec icône et couleur.</div>
+      </div>
+      <div class="card c-orange">
+        <div class="card-icon">📊</div>
+        <div class="card-title">M4 — Bilan journalier</div>
+        <div class="card-text">Camembert de répartition du temps par catégorie + liste des activités avec durée totale par catégorie.</div>
+      </div>
+      <div class="card c-purple">
+        <div class="card-icon">📈</div>
+        <div class="card-title">M5 — Bilan hebdo & mensuel</div>
+        <div class="card-text">Graphique en barres comparant les journées. Score de productivité par jour. Tendances sur la semaine.</div>
+      </div>
+      <div class="card c-pink">
+        <div class="card-icon">🔍</div>
+        <div class="card-title">M6 — Historique</div>
+        <div class="card-text">Consulter les journées passées. Filtrer par catégorie. Voir le détail de chaque journée archivée.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04 PARCOURS NOMINAL -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <div>
+        <div class="section-title">Parcours Nominal</div>
+        <div class="section-sub">Flux principal d'utilisation quotidienne</div>
+      </div>
+    </div>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-step-num">01</div>
+        <div class="flow-step-label">Ouvrir l'app</div>
+        <div class="flow-step-sub">Accueil — journal du jour</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-step-num">02</div>
+        <div class="flow-step-label">Nouvelle activité</div>
+        <div class="flow-step-sub">Titre + catégorie + heure début</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-step-num">03</div>
+        <div class="flow-step-label">Clôturer</div>
+        <div class="flow-step-sub">Saisir l'heure de fin</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-step-num">04</div>
+        <div class="flow-step-label">Consulter</div>
+        <div class="flow-step-sub">Timeline du jour mise à jour</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-step-num">05</div>
+        <div class="flow-step-label">Bilan du soir</div>
+        <div class="flow-step-sub">Graphiques + score journée</div>
+      </div>
+    </div>
+    <div class="infobox" style="margin-top: 20px;">
+      <strong>Flux secondaire :</strong> L'utilisateur peut aussi aller directement dans l'onglet Statistiques pour consulter les bilans semaine / mois sans avoir à enregistrer une nouvelle activité.
+    </div>
+  </div>
+
+  <!-- 05 RÈGLES MÉTIER -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <div>
+        <div class="section-title">Règles Métier</div>
+        <div class="section-sub">Contraintes fonctionnelles et de validation</div>
+      </div>
+    </div>
+
+    <div class="rule" style="background:var(--red-l); border-color:var(--red)">
+      <span class="rule-code" style="color:var(--red)">RG-01</span>
+      <span class="rule-text"><strong>Une activité doit obligatoirement avoir un titre et une catégorie.</strong> Aucune activité ne peut être enregistrée sans ces deux champs. Le champ heure de début est auto-rempli avec l'heure actuelle mais reste modifiable.</span>
+    </div>
+
+    <div class="rule" style="background:var(--red-l); border-color:var(--red)">
+      <span class="rule-code" style="color:var(--red)">RG-02</span>
+      <span class="rule-text"><strong>L'heure de fin doit être postérieure à l'heure de début.</strong> Si l'utilisateur saisit une heure de fin antérieure, afficher un message d'erreur et bloquer la sauvegarde. Durée minimum : <code>1 minute</code>.</span>
+    </div>
+
+    <div class="rule" style="background:var(--orange-l); border-color:var(--orange)">
+      <span class="rule-code" style="color:var(--orange)">RG-03</span>
+      <span class="rule-text"><strong>Une activité "en cours" peut exister.</strong> Si l'utilisateur crée une activité sans heure de fin, elle apparaît dans la timeline avec un indicateur visuel <code>"en cours"</code>. Elle peut être clôturée à tout moment.</span>
+    </div>
+
+    <div class="rule" style="background:var(--orange-l); border-color:var(--orange)">
+      <span class="rule-code" style="color:var(--orange)">RG-04</span>
+      <span class="rule-text"><strong>Le calcul de durée est automatique.</strong> La durée d'une activité = <code>heure_fin - heure_debut</code> en minutes. Elle est affichée arrondie à la minute la plus proche. Le total journalier ne peut pas dépasser <code>1440 min</code> (24h).</span>
+    </div>
+
+    <div class="rule" style="background:var(--green-l); border-color:var(--green)">
+      <span class="rule-code" style="color:var(--green)">RG-05</span>
+      <span class="rule-text"><strong>Les données sont organisées par journée.</strong> Chaque activité est rattachée à une date. Le bilan journalier agrège toutes les activités de la même date (format <code>YYYY-MM-DD</code> comme clé de stockage).</span>
+    </div>
+
+    <div class="rule" style="background:var(--green-l); border-color:var(--green)">
+      <span class="rule-code" style="color:var(--green)">RG-06</span>
+      <span class="rule-text"><strong>Le score de productivité est calculé côté client.</strong> Il est basé sur le ratio temps <code>Travail / Total journalier</code>. Un score ≥ 60% = journée productive. Affiché sous forme de badge coloré dans les bilans.</span>
+    </div>
+
+    <div class="rule" style="background:var(--blue-l); border-color:var(--blue)">
+      <span class="rule-code" style="color:var(--blue)">RG-07</span>
+      <span class="rule-text"><strong>Le bilan hebdomadaire couvre les 7 derniers jours glissants.</strong> Le bilan mensuel couvre les 30 derniers jours. Les données sont lues depuis SQLite via une requête agrégée (<code>GROUP BY date</code>) et calculées à la volée sans pré-calcul stocké.</span>
+    </div>
+
+    <div class="rule" style="background:var(--blue-l); border-color:var(--blue)">
+      <span class="rule-code" style="color:var(--blue)">RG-08</span>
+      <span class="rule-text"><strong>Toute activité est modifiable ou supprimable.</strong> L'utilisateur peut éditer le titre, la catégorie, l'heure de début ou de fin d'une activité existante. La suppression est définitive et demande une confirmation.</span>
+    </div>
+  </div>
+
+  <!-- 06 MODÈLE DE DONNÉES -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <div>
+        <div class="section-title">Modèle de Données</div>
+        <div class="section-sub">Schéma SQLite (drift) — base embarquée sur l'appareil</div>
+      </div>
+    </div>
+    <div class="card-grid-2">
+      <div class="card c-primary">
+        <div class="screen-label">Table</div>
+        <div class="card-title">activities</div>
+        <ul class="card-list">
+          <li><code style="font-family:DM Mono,monospace;font-size:12px">id</code> — TEXT PK (UUID v4)</li>
+          <li><code style="font-family:DM Mono,monospace;font-size:12px">title</code> — TEXT NOT NULL</li>
+          <li><code style="font-family:DM Mono,monospace;font-size:12px">category</code> — TEXT (enum CategoryId)</li>
+          <li><code style="font-family:DM Mono,monospace;font-size:12px">start_time</code> — TEXT (ISO 8601 local)</li>
+          <li><code style="font-family:DM Mono,monospace;font-size:12px">end_time</code> — TEXT NULL</li>
+          <li><code style="font-family:DM Mono,monospace;font-size:12px">duration_min</code> — INTEGER NULL</li>
+          <li><code style="font-family:DM Mono,monospace;font-size:12px">date</code> — TEXT (YYYY-MM-DD, indexé)</li>
+          <li><code style="font-family:DM Mono,monospace;font-size:12px">created_at</code> — TEXT (ISO 8601)</li>
+        </ul>
+      </div>
+      <div class="card c-blue">
+        <div class="screen-label">Category</div>
+        <div class="card-title">Catégories (enum Dart)</div>
+        <ul class="card-list">
+          <li><code style="font-family:DM Mono,monospace;font-size:12px">work</code> — Travail 💼</li>
+          <li><code style="font-family:DM Mono,monospace;font-size:12px">sport</code> — Sport 🏃</li>
+          <li><code style="font-family:DM Mono,monospace;font-size:12px">leisure</code> — Loisirs 🎮</li>
+          <li><code style="font-family:DM Mono,monospace;font-size:12px">sleep</code> — Sommeil 😴</li>
+          <li><code style="font-family:DM Mono,monospace;font-size:12px">social</code> — Social 💬</li>
+          <li><code style="font-family:DM Mono,monospace;font-size:12px">other</code> — Autre 📦</li>
+        </ul>
+      </div>
+      <div class="card c-green">
+        <div class="screen-label">DayStats</div>
+        <div class="card-title">Stats calculées par jour (modèle Dart, non stocké)</div>
+        <ul class="card-list">
+          <li><code style="font-family:DM Mono,monospace;font-size:12px">date</code> — YYYY-MM-DD</li>
+          <li><code style="font-family:DM Mono,monospace;font-size:12px">totalMin</code> — total tracké (min)</li>
+          <li><code style="font-family:DM Mono,monospace;font-size:12px">byCategory</code> — Map&lt;CategoryId, int&gt;</li>
+          <li><code style="font-family:DM Mono,monospace;font-size:12px">productivityScore</code> — 0 à 100</li>
+          <li><code style="font-family:DM Mono,monospace;font-size:12px">activitiesCount</code> — int</li>
+        </ul>
+      </div>
+      <div class="card c-orange">
+        <div class="screen-label">Index & Fichier DB</div>
+        <div class="card-title">Détails de stockage</div>
+        <ul class="card-list">
+          <li><code style="font-family:DM Mono,monospace;font-size:12px">timeflow.sqlite</code> — fichier app-privé</li>
+          <li>Index sur <code style="font-family:DM Mono,monospace;font-size:12px">date</code> et <code style="font-family:DM Mono,monospace;font-size:12px">category</code></li>
+          <li>Migrations gérées par drift (schemaVersion)</li>
+          <li>Table <code style="font-family:DM Mono,monospace;font-size:12px">settings</code> — clé/valeur pour préférences</li>
+        </ul>
+      </div>
+    </div>
+    <div class="infobox">
+      <strong>Pourquoi une vraie base plutôt qu'un stockage clé/valeur :</strong> les bilans hebdo/mensuel nécessitent des agrégations (<code>SUM</code>, <code>GROUP BY</code>) sur plusieurs jours. SQLite via drift permet d'écrire ces requêtes une fois, typées et testées, au lieu de tout recharger en mémoire pour les recalculer manuellement en Dart.
+    </div>
+  </div>
+
+  <!-- 07 SCREENS & NAVIGATION -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <div>
+        <div class="section-title">Écrans & Navigation</div>
+        <div class="section-sub">Structure de l'application et onglets principaux</div>
+      </div>
+    </div>
+    <div class="card-grid-3">
+      <div class="card c-primary">
+        <div class="screen-label">Tab 1</div>
+        <div class="card-title">Aujourd'hui</div>
+        <ul class="card-list">
+          <li>Timeline visuelle du jour</li>
+          <li>Bouton "Nouvelle activité"</li>
+          <li>Activité en cours (si existante)</li>
+          <li>Résumé rapide en bas</li>
+        </ul>
+      </div>
+      <div class="card c-purple">
+        <div class="screen-label">Tab 2</div>
+        <div class="card-title">Statistiques</div>
+        <ul class="card-list">
+          <li>Toggle Jour / Semaine / Mois</li>
+          <li>Camembert de répartition</li>
+          <li>Barres de comparaison</li>
+          <li>Score de productivité</li>
+        </ul>
+      </div>
+      <div class="card c-teal">
+        <div class="screen-label">Tab 3</div>
+        <div class="card-title">Historique</div>
+        <ul class="card-list">
+          <li>Liste des journées passées</li>
+          <li>Score par journée</li>
+          <li>Filtre par catégorie</li>
+          <li>Détail d'une journée</li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top: 20px;">
+      <div class="card-grid-2">
+        <div class="card c-gold">
+          <div class="screen-label">Modal</div>
+          <div class="card-title">Nouvelle activité (Bottom Sheet)</div>
+          <ul class="card-list">
+            <li>Champ titre (keyboard auto-focus)</li>
+            <li>Sélecteur de catégorie (grid de chips)</li>
+            <li>Heure de début (pre-filled = maintenant)</li>
+            <li>Heure de fin (optionnelle)</li>
+            <li>Bouton Enregistrer</li>
+          </ul>
+        </div>
+        <div class="card c-pink">
+          <div class="screen-label">Modal</div>
+          <div class="card-title">Détail / Édition d'activité</div>
+          <ul class="card-list">
+            <li>Affichage de toutes les infos</li>
+            <li>Bouton "Clôturer" si en cours</li>
+            <li>Bouton "Modifier"</li>
+            <li>Bouton "Supprimer" (confirmation)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 08 STACK TECHNIQUE -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <div>
+        <div class="section-title">Stack Technique</div>
+        <div class="section-sub">Technologies retenues et leur rôle dans l'architecture</div>
+      </div>
+    </div>
+    <table class="stack-table">
+      <thead>
+        <tr>
+          <th>Couche</th>
+          <th>Technologie</th>
+          <th>Rôle</th>
+          <th>Hébergement</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Framework</td>
+          <td><span class="tech-badge">Flutter (Dart)</span></td>
+          <td>Framework mobile cross-platform iOS & Android, un seul codebase</td>
+          <td>Local</td>
+        </tr>
+        <tr>
+          <td>Navigation</td>
+          <td><span class="tech-badge">go_router</span></td>
+          <td>Navigation déclarative — onglets (shell route) + routes modales</td>
+          <td>Bundlé</td>
+        </tr>
+        <tr>
+          <td>Base de données</td>
+          <td><span class="tech-badge">drift (SQLite)</span></td>
+          <td>Persistance locale relationnelle, requêtes typées, streams réactifs</td>
+          <td>On-device (fichier .sqlite)</td>
+        </tr>
+        <tr>
+          <td>State Management</td>
+          <td><span class="tech-badge">Riverpod</span></td>
+          <td>État global des activités et des stats, providers réactifs branchés sur drift</td>
+          <td>Bundlé</td>
+        </tr>
+        <tr>
+          <td>Graphiques</td>
+          <td><span class="tech-badge">fl_chart</span></td>
+          <td>Camembert + barres + animations de charts</td>
+          <td>Bundlé</td>
+        </tr>
+        <tr>
+          <td>Animations</td>
+          <td><span class="tech-badge">Flutter implicit/explicit animations</span></td>
+          <td>Transitions fluides, bottom sheet, AnimatedContainer / Hero</td>
+          <td>Natif Flutter</td>
+        </tr>
+        <tr>
+          <td>UI Components</td>
+          <td><span class="tech-badge">Widgets custom (Material 3)</span></td>
+          <td>Composants maison avec design system cohérent (ThemeData)</td>
+          <td>Bundlé</td>
+        </tr>
+        <tr>
+          <td>Date/Heure</td>
+          <td><span class="tech-badge">intl + DateTime natif</span></td>
+          <td>Manipulation et formatage des dates/heures</td>
+          <td>Bundlé</td>
+        </tr>
+        <tr>
+          <td>Identifiants</td>
+          <td><span class="tech-badge">uuid</span></td>
+          <td>Génération d'UUID v4 pour chaque activité</td>
+          <td>Bundlé</td>
+        </tr>
+        <tr>
+          <td>Tests</td>
+          <td><span class="tech-badge">flutter_test + drift testing</span></td>
+          <td>Tests unitaires métier + tests de requêtes SQLite en mémoire</td>
+          <td>Bundlé</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 09 ARBORESCENCE -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">09</span>
+      <div>
+        <div class="section-title">Arborescence du projet</div>
+        <div class="section-sub">Structure des fichiers et dossiers</div>
+      </div>
+    </div>
+    <div class="card-grid-2">
+      <div class="tree">
+        <div><span class="folder">timeflow/</span></div>
+        <div>├── <span class="folder">lib/</span></div>
+        <div>│   ├── <span class="folder">data/</span> <span class="comment">// drift : DB + DAO</span></div>
+        <div>│   │   ├── <span class="file">database.dart</span></div>
+        <div>│   │   ├── <span class="file">activities_dao.dart</span></div>
+        <div>│   │   └── <span class="file">tables.dart</span></div>
+        <div>│   ├── <span class="folder">domain/</span> <span class="comment">// pur Dart, testable</span></div>
+        <div>│   │   ├── <span class="file">activity.dart</span></div>
+        <div>│   │   ├── <span class="file">category.dart</span></div>
+        <div>│   │   ├── <span class="file">day_stats.dart</span></div>
+        <div>│   │   └── <span class="file">validate_activity.dart</span> <span class="comment">// RG-01/02</span></div>
+        <div>│   ├── <span class="folder">application/</span> <span class="comment">// providers Riverpod</span></div>
+        <div>│   │   ├── <span class="file">activities_provider.dart</span></div>
+        <div>│   │   └── <span class="file">stats_provider.dart</span></div>
+        <div>│   ├── <span class="folder">screens/</span></div>
+        <div>│   │   ├── <span class="file">today_screen.dart</span></div>
+        <div>│   │   ├── <span class="file">stats_screen.dart</span></div>
+        <div>│   │   └── <span class="file">history_screen.dart</span></div>
+      </div>
+      <div class="tree">
+        <div>│   ├── <span class="folder">widgets/</span></div>
+        <div>│   │   ├── <span class="file">activity_card.dart</span></div>
+        <div>│   │   ├── <span class="file">category_chip.dart</span></div>
+        <div>│   │   ├── <span class="file">timeline.dart</span></div>
+        <div>│   │   ├── <span class="file">score_badge.dart</span></div>
+        <div>│   │   └── <span class="folder">charts/</span> <span class="comment">// fl_chart</span></div>
+        <div>│   │       ├── <span class="file">category_pie_chart.dart</span></div>
+        <div>│   │       └── <span class="file">daily_bar_chart.dart</span></div>
+        <div>│   ├── <span class="folder">sheets/</span> <span class="comment">// bottom sheets</span></div>
+        <div>│   │   ├── <span class="file">new_activity_sheet.dart</span></div>
+        <div>│   │   └── <span class="file">activity_detail_sheet.dart</span></div>
+        <div>│   ├── <span class="folder">theme/</span></div>
+        <div>│   │   └── <span class="file">app_theme.dart</span> <span class="comment">// couleurs par catégorie</span></div>
+        <div>│   ├── <span class="folder">router/</span></div>
+        <div>│   │   └── <span class="file">app_router.dart</span> <span class="comment">// go_router</span></div>
+        <div>│   ├── <span class="folder">dev/</span></div>
+        <div>│   │   └── <span class="file">seeds.dart</span> <span class="comment">// données fictives</span></div>
+        <div>│   └── <span class="file">main.dart</span> <span class="comment">// entrée principale</span></div>
+        <div>├── <span class="folder">test/</span> <span class="comment">// tests domain + data</span></div>
+        <div>└── <span class="file">pubspec.yaml</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10 PLANNING -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">10</span>
+      <div>
+        <div class="section-title">Planning par phases</div>
+        <div class="section-sub">Découpage pédagogique adapté au profil débutant</div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-header">
+        <span class="phase-name">Phase 1 — Setup & Navigation</span>
+        <span class="phase-dur">Semaine 1</span>
+      </div>
+      <div class="phase-bar-bg"><div class="phase-bar" style="width:20%; background:var(--primary);"></div></div>
+      <div class="phase-desc">Init projet Flutter, structure de dossiers, go_router (onglets), écrans vides, ThemeData / design system.</div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-header">
+        <span class="phase-name">Phase 2 — Base de données & Saisie</span>
+        <span class="phase-dur">Semaine 2</span>
+      </div>
+      <div class="phase-bar-bg"><div class="phase-bar" style="width:40%; background:var(--green);"></div></div>
+      <div class="phase-desc">Schéma drift (table activities), DAO, formulaire de création d'activité, affichage de la liste du jour via un stream réactif.</div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-header">
+        <span class="phase-name">Phase 3 — Timeline & Édition</span>
+        <span class="phase-dur">Semaine 3</span>
+      </div>
+      <div class="phase-bar-bg"><div class="phase-bar" style="width:60%; background:var(--blue);"></div></div>
+      <div class="phase-desc">Timeline visuelle, activité en cours (Timer/Ticker), édition et suppression, animations de base.</div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-header">
+        <span class="phase-name">Phase 4 — Statistiques & Graphiques</span>
+        <span class="phase-dur">Semaine 4</span>
+      </div>
+      <div class="phase-bar-bg"><div class="phase-bar" style="width:80%; background:var(--purple);"></div></div>
+      <div class="phase-desc">Requêtes d'agrégation SQL (jour/semaine/mois), camembert et barres fl_chart, score de productivité.</div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-header">
+        <span class="phase-name">Phase 5 — Polish & Animations</span>
+        <span class="phase-dur">Semaine 5</span>
+      </div>
+      <div class="phase-bar-bg"><div class="phase-bar" style="width:100%; background:var(--gold);"></div></div>
+      <div class="phase-desc">Animations Flutter (implicites/explicites), bottom sheet animé, micro-interactions, finitions visuelles.</div>
+    </div>
+  </div>
+
+  <!-- 11 POINTS D'ATTENTION -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">11</span>
+      <div>
+        <div class="section-title">Points d'attention</div>
+        <div class="section-sub">Risques techniques et décisions importantes à prendre tôt</div>
+      </div>
+    </div>
+    <div class="card-grid-2">
+      <div class="card c-red">
+        <div class="card-icon">⚠️</div>
+        <div class="card-title">Requêtes SQLite, pas de full-scan</div>
+        <div class="card-text">Ne jamais charger toute la table en mémoire pour calculer les stats côté Dart. Écrire des requêtes drift (WHERE date, GROUP BY) qui font le travail dans SQLite — c'est tout l'intérêt d'une vraie base par rapport à un stockage clé/valeur.</div>
+      </div>
+      <div class="card c-orange">
+        <div class="card-icon">🕐</div>
+        <div class="card-title">Gestion des fuseaux horaires</div>
+        <div class="card-text">Stocker toutes les dates en ISO 8601 local (sans conversion UTC) pour éviter les décalages d'affichage. Utiliser <code>DateTime</code> local (pas <code>.toUtc()</code>) de bout en bout.</div>
+      </div>
+      <div class="card c-blue">
+        <div class="card-icon">📱</div>
+        <div class="card-title">Migrations drift</div>
+        <div class="card-text">Définir <code>schemaVersion</code> et une stratégie de migration dès la Phase 2, même à 1 seule table. Un changement de schéma sans migration plante l'app sur les installs existantes.</div>
+      </div>
+      <div class="card c-purple">
+        <div class="card-icon">🧪</div>
+        <div class="card-title">Testing sans backend</div>
+        <div class="card-text">Créer un fichier de seeds (données fictives insérées via le DAO) pour tester les graphiques sans avoir à saisir 30 jours d'activités manuellement. Indispensable dès la Phase 4. Utiliser une base drift en mémoire pour les tests unitaires.</div>
+      </div>
+    </div>
+    <div class="infobox" style="border-color: var(--gold); background: var(--gold-l); color: #5A3D0A;">
+      <strong>Conseil tech lead :</strong> Construire le DAO (<code>lib/data/activities_dao.dart</code>) dès le début avec des méthodes claires (<code>watchByDate</code>, <code>save</code>, <code>delete</code>, <code>aggregateRange</code>) qui exposent des <code>Stream</code> réactifs. Toute la logique de l'app en dépendra — la UI se contente d'écouter, sans jamais parler SQL directement.
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

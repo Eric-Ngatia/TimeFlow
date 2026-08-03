@@ -1,0 +1,13 @@
+name: timeflow_workspace
+description: >
+  Racine du monorepo TimeFlow. Ce package n'est pas publié et ne contient
+  aucun code — il existe uniquement pour permettre l'installation locale de
+  Melos, requise depuis Melos 3.0.0 (voir `melos.yaml` pour la config du
+  workspace : scripts, packages).
+publish_to: none
+
+environment:
+  sdk: ^3.4.0
+
+dev_dependencies:
+  melos: ^6.3.0
