@@ -27,10 +27,11 @@ Lance les commandes depuis la **racine** (routées par Melos) sauf indication co
 - `cd apps/mobile && flutter run` — lance l'app.
 - `cd apps/mobile && dart run build_runner build --delete-conflicting-outputs` — codegen drift (`*.g.dart`).
 
-## Workflow OBLIGATOIRE pour toute tâche : Planification → Exécution → Révision
+## Workflow OBLIGATOIRE pour toute tâche : Branche → Planification → Exécution → Révision
 
 Aucune tâche de développement ne saute d'étape.
 
+0. **Branche dédiée** — avant toute nouvelle feature, créer une branche git dédiée (`git checkout -b feature/<slug>`, ou via le skill `new-feature` qui scaffolde dossiers + branche). Jamais de nouvelle feature développée directement sur `main`.
 1. **Planification** — via `/plan` (agent `planner`). Le plan est **écrit dans `.plans/<slug>.md`** et **validé par un humain** avant tout code.
 2. **Exécution** — via `/exec` (agent `executor`). Implémente **strictement** le plan approuvé. Un manque découvert → retour au planner, pas d'improvisation.
 3. **Révision** — via `/review` (agent `reviewer`). Vérifie contre le plan + les règles métier, lance `analyze/test`, propose des corrections.
