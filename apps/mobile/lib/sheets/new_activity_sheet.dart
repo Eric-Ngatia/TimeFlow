@@ -7,6 +7,7 @@ import 'package:uuid/uuid.dart';
 import '../application/activities_provider.dart';
 import '../theme/category_colors.dart';
 import '../theme/design_tokens.dart';
+import '../theme/motion_tokens.dart';
 import '../widgets/category_chip.dart';
 
 /// Ouvre la sheet de création/édition d'activité.
@@ -22,6 +23,7 @@ Future<void> showNewActivitySheet(BuildContext context, {Activity? existingActiv
     context: context,
     isScrollControlled: true,
     useSafeArea: true,
+    showDragHandle: true,
     builder: (context) => NewActivitySheet(existingActivity: existingActivity),
   );
 }
@@ -191,13 +193,8 @@ class _NewActivitySheetState extends ConsumerState<NewActivitySheet> {
                   ),
               ],
             ),
-            if (_validation.errorFor(ValidationField.category) != null) ...[
-              const SizedBox(height: 6),
-              Text(
-                _validation.errorFor(ValidationField.category)!,
-                style: textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.error),
-              ),
-            ],
+            _AnimatedErrorText(
+                message: _validation.errorFor(ValidationField.category)),
             const SizedBox(height: 20),
             Row(
               children: [
@@ -228,20 +225,9 @@ class _NewActivitySheetState extends ConsumerState<NewActivitySheet> {
                 }),
                 child: const Text('Marquer comme en cours'),
               ),
-            if (_validation.errorFor(ValidationField.timeRange) != null) ...[
-              const SizedBox(height: 6),
-              Text(
-                _validation.errorFor(ValidationField.timeRange)!,
-                style: textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.error),
-              ),
-            ],
-            if (_dailyTotalError != null) ...[
-              const SizedBox(height: 6),
-              Text(
-                _dailyTotalError!,
-                style: textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.error),
-              ),
-            ],
+            _AnimatedErrorText(
+                message: _validation.errorFor(ValidationField.timeRange)),
+            _AnimatedErrorText(message: _dailyTotalError),
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
@@ -259,6 +245,42 @@ class _NewActivitySheetState extends ConsumerState<NewActivitySheet> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Bloc d'erreur inline (catégorie, plage horaire, total journalier) dont
+/// l'apparition/disparition est progressive (`AnimatedSize` +
+/// `AnimatedOpacity`) plutôt qu'une insertion/suppression sèche dans la
+/// liste `children`. Affiche les erreurs déjà calculées par
+/// `core.validateActivity`/`validateDailyTotal` — aucune règle métier
+/// redéfinie ici.
+class _AnimatedErrorText extends StatelessWidget {
+  const _AnimatedErrorText({required this.message});
+
+  final String? message;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final errorColor = Theme.of(context).colorScheme.error;
+
+    return AnimatedSize(
+      duration: MotionTokens.fast,
+      alignment: Alignment.topCenter,
+      child: AnimatedOpacity(
+        opacity: message != null ? 1 : 0,
+        duration: MotionTokens.fast,
+        child: message == null
+            ? const SizedBox.shrink()
+            : Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Text(
+                  message!,
+                  style: textTheme.bodySmall?.copyWith(color: errorColor),
+                ),
+              ),
       ),
     );
   }

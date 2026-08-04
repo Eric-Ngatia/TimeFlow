@@ -4,6 +4,7 @@ import 'package:timeflow_domain/timeflow_domain.dart';
 
 import '../theme/category_colors.dart';
 import '../theme/design_tokens.dart';
+import 'animations/fade_slide_in.dart';
 
 final DateFormat _timeFormat = DateFormat.Hm();
 
@@ -18,12 +19,14 @@ class Timeline extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (activities.isEmpty) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 32),
-        child: Center(
-          child: Text(
-            "Aucune activité aujourd'hui.",
-            style: Theme.of(context).textTheme.bodyMedium,
+      return FadeSlideIn(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 32),
+          child: Center(
+            child: Text(
+              "Aucune activité aujourd'hui.",
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
           ),
         ),
       );
@@ -32,10 +35,13 @@ class Timeline extends StatelessWidget {
     return Column(
       children: [
         for (var i = 0; i < activities.length; i++)
-          _TimelineTile(
-            activity: activities[i],
-            isLast: i == activities.length - 1,
-            onTap: onTapActivity == null ? null : () => onTapActivity!(activities[i]),
+          FadeSlideIn(
+            delay: Duration(milliseconds: 40 * i.clamp(0, 6)),
+            child: _TimelineTile(
+              activity: activities[i],
+              isLast: i == activities.length - 1,
+              onTap: onTapActivity == null ? null : () => onTapActivity!(activities[i]),
+            ),
           ),
       ],
     );

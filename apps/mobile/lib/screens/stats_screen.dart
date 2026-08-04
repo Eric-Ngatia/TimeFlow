@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../theme/motion_tokens.dart';
 import '../widgets/segmented_tab_bar.dart';
 import '../widgets/theme_toggle_button.dart';
 import 'stats/day_stats_view.dart';
@@ -43,11 +44,19 @@ class _StatsScreenState extends State<StatsScreen> {
             ),
           ),
           Expanded(
-            child: switch (_segment) {
-              _StatsSegment.day => const DayStatsView(),
-              _StatsSegment.week => const WeekStatsView(),
-              _StatsSegment.month => const MonthStatsView(),
-            },
+            child: AnimatedSwitcher(
+              duration: MotionTokens.fast,
+              transitionBuilder: (child, animation) =>
+                  FadeTransition(opacity: animation, child: child),
+              child: KeyedSubtree(
+                key: ValueKey(_segment),
+                child: switch (_segment) {
+                  _StatsSegment.day => const DayStatsView(),
+                  _StatsSegment.week => const WeekStatsView(),
+                  _StatsSegment.month => const MonthStatsView(),
+                },
+              ),
+            ),
           ),
         ],
       ),

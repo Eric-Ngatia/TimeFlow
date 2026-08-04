@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme/design_tokens.dart';
+import '../theme/motion_tokens.dart';
 
 /// Un segment de [SegmentedTabBar].
 ///
@@ -51,7 +52,7 @@ class SegmentedTabBar<T> extends StatelessWidget {
                 onTap: () => onChanged(segment.value),
                 borderRadius: BorderRadius.circular(10),
                 child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 150),
+                  duration: MotionTokens.fast,
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(

@@ -4,6 +4,7 @@ import 'package:timeflow_core/timeflow_core.dart';
 
 import '../../application/stats_provider.dart';
 import '../../utils/format_duration.dart';
+import '../../widgets/animations/fade_slide_in.dart';
 import '../../widgets/charts/category_legend.dart';
 import '../../widgets/charts/weekly_bar_chart.dart';
 import '../../widgets/kpi_card.dart';
@@ -18,24 +19,27 @@ class WeekStatsView extends ConsumerWidget {
     final statsAsync = ref.watch(weekStatsProvider);
 
     return statsAsync.when(
-      data: (stats) => ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          WeeklyBarChart(days: stats.days),
-          const SizedBox(height: 12),
-          CategoryLegend(
-            minutesByCategory: mergeByCategory(stats.days),
-            showPercentage: false,
-          ),
-          const SizedBox(height: 24),
-          KpiCard(
-              label: 'Score moyen', value: '${stats.averageScore.round()}%'),
-          const SizedBox(height: 12),
-          KpiCard(
-              label: 'Temps total', value: formatDurationLabel(stats.totalMin)),
-          const SizedBox(height: 12),
-          KpiCard(label: 'Jours suivis', value: '${stats.daysTracked}/7'),
-        ],
+      data: (stats) => FadeSlideIn(
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            WeeklyBarChart(days: stats.days),
+            const SizedBox(height: 12),
+            CategoryLegend(
+              minutesByCategory: mergeByCategory(stats.days),
+              showPercentage: false,
+            ),
+            const SizedBox(height: 24),
+            KpiCard(
+                label: 'Score moyen', value: '${stats.averageScore.round()}%'),
+            const SizedBox(height: 12),
+            KpiCard(
+                label: 'Temps total',
+                value: formatDurationLabel(stats.totalMin)),
+            const SizedBox(height: 12),
+            KpiCard(label: 'Jours suivis', value: '${stats.daysTracked}/7'),
+          ],
+        ),
       ),
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stackTrace) => Center(child: Text('Erreur : $error')),
