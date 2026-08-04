@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../screens/history_screen.dart';
 import '../screens/stats_screen.dart';
 import '../screens/today_screen.dart';
+import '../theme/motion_tokens.dart';
 
 /// Routes des 3 onglets principaux (`ShellRoute`).
 ///
@@ -31,20 +32,37 @@ final GoRouter appRouter = GoRouter(
       routes: <RouteBase>[
         GoRoute(
           path: AppRoutes.today,
-          builder: (context, state) => const TodayScreen(),
+          pageBuilder: (context, state) =>
+              _fadeTransitionPage(state, const TodayScreen()),
         ),
         GoRoute(
           path: AppRoutes.stats,
-          builder: (context, state) => const StatsScreen(),
+          pageBuilder: (context, state) =>
+              _fadeTransitionPage(state, const StatsScreen()),
         ),
         GoRoute(
           path: AppRoutes.history,
-          builder: (context, state) => const HistoryScreen(),
+          pageBuilder: (context, state) =>
+              _fadeTransitionPage(state, const HistoryScreen()),
         ),
       ],
     ),
   ],
 );
+
+/// Page de destination avec un simple fondu (`FadeTransition`) entre les
+/// 3 onglets principaux — pas de `StatefulShellRoute` (la perte d'état par
+/// onglet, filtre Historique/segment Stats, reste un comportement
+/// pré-existant, hors périmètre Phase 5 « Polish & Animations »).
+CustomTransitionPage<void> _fadeTransitionPage(GoRouterState state, Widget child) {
+  return CustomTransitionPage<void>(
+    key: state.pageKey,
+    child: child,
+    transitionDuration: MotionTokens.entrance,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+        FadeTransition(opacity: animation, child: child),
+  );
+}
 
 /// Coquille commune aux 3 onglets : contenu + barre de navigation basse.
 class MainShell extends StatelessWidget {

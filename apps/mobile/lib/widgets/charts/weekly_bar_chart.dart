@@ -3,19 +3,40 @@ import 'package:flutter/material.dart';
 import 'package:timeflow_domain/timeflow_domain.dart';
 
 import '../../theme/design_tokens.dart';
+import '../../theme/motion_tokens.dart';
 
 const List<String> _weekdayLabelsFr = <String>['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
 
 /// Bar chart des 7 derniers jours glissants (RG-07), une barre par jour,
 /// pour la vue Semaine de l'écran Statistiques.
-class WeeklyBarChart extends StatelessWidget {
+///
+/// À l'ouverture, les barres poussent de 0 vers leur valeur finale
+/// (`days[i].totalMin`), animation one-shot jouée une seule fois au montage
+/// du widget (pas de rejeu sur mise à jour des données).
+class WeeklyBarChart extends StatefulWidget {
   const WeeklyBarChart({required this.days, super.key});
 
   /// Un [DayStats] par jour de la fenêtre, trié par date croissante.
   final List<DayStats> days;
 
   @override
+  State<WeeklyBarChart> createState() => _WeeklyBarChartState();
+}
+
+class _WeeklyBarChartState extends State<WeeklyBarChart> {
+  bool _grown = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) setState(() => _grown = true);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final days = widget.days;
     final tokens = Theme.of(context).extension<TimeFlowColors>()!;
     final textTheme = Theme.of(context).textTheme;
 
@@ -32,6 +53,8 @@ class WeeklyBarChart extends StatelessWidget {
     return SizedBox(
       height: 200,
       child: BarChart(
+        swapAnimationDuration: MotionTokens.chartEntrance,
+        swapAnimationCurve: Curves.easeOutCubic,
         BarChartData(
           maxY: safeMax * 1.2,
           barTouchData: BarTouchData(enabled: false),
@@ -65,7 +88,7 @@ class WeeklyBarChart extends StatelessWidget {
                 x: i,
                 barRods: <BarChartRodData>[
                   BarChartRodData(
-                    toY: days[i].totalMin.toDouble(),
+                    toY: _grown ? days[i].totalMin.toDouble() : 0,
                     color: tokens.accent,
                     width: 18,
                     borderRadius: BorderRadius.circular(6),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme/design_tokens.dart';
+import '../theme/motion_tokens.dart';
 
 /// Variante visuelle de [CategoryChip].
 enum CategoryChipStyle {
@@ -76,7 +77,7 @@ class CategoryChip extends StatelessWidget {
       onTap: onTap,
       borderRadius: borderRadius,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
+        duration: MotionTokens.fast,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           color: backgroundColor,

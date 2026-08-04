@@ -4,6 +4,7 @@ import 'package:timeflow_core/timeflow_core.dart';
 
 import '../../application/stats_provider.dart';
 import '../../utils/format_duration.dart';
+import '../../widgets/animations/fade_slide_in.dart';
 import '../../widgets/charts/category_donut_chart.dart';
 import '../../widgets/charts/category_legend.dart';
 import '../../widgets/kpi_card.dart';
@@ -21,22 +22,25 @@ class MonthStatsView extends ConsumerWidget {
     return statsAsync.when(
       data: (stats) {
         final merged = mergeByCategory(stats.days);
-        return ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            CategoryDonutChart(minutesByCategory: merged),
-            const SizedBox(height: 12),
-            CategoryLegend(minutesByCategory: merged),
-            const SizedBox(height: 24),
-            KpiCard(
-                label: 'Score moyen', value: '${stats.averageScore.round()}%'),
-            const SizedBox(height: 12),
-            KpiCard(
-                label: 'Heures totales',
-                value: formatDurationLabel(stats.totalMin)),
-            const SizedBox(height: 12),
-            KpiCard(label: 'Jours suivis', value: '${stats.daysTracked}/30'),
-          ],
+        return FadeSlideIn(
+          child: ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              CategoryDonutChart(minutesByCategory: merged),
+              const SizedBox(height: 12),
+              CategoryLegend(minutesByCategory: merged),
+              const SizedBox(height: 24),
+              KpiCard(
+                  label: 'Score moyen',
+                  value: '${stats.averageScore.round()}%'),
+              const SizedBox(height: 12),
+              KpiCard(
+                  label: 'Heures totales',
+                  value: formatDurationLabel(stats.totalMin)),
+              const SizedBox(height: 12),
+              KpiCard(label: 'Jours suivis', value: '${stats.daysTracked}/30'),
+            ],
+          ),
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),

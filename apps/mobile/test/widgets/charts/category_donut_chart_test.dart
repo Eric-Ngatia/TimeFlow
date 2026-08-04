@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timeflow_domain/timeflow_domain.dart';
@@ -20,6 +21,7 @@ void main() {
         ),
       ),
     );
+    await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);
   });
@@ -34,6 +36,7 @@ void main() {
             body: CategoryDonutChart(minutesByCategory: <CategoryId, int>{})),
       ),
     );
+    await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);
     expect(find.text('Aucune donnée'), findsOneWidget);
@@ -55,6 +58,7 @@ void main() {
         ),
       ),
     );
+    await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);
   });
@@ -80,6 +84,7 @@ void main() {
         ),
       ),
     );
+    await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);
   });
@@ -100,8 +105,80 @@ void main() {
         ),
       ),
     );
+    await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);
     expect(find.text('2h30'), findsOneWidget);
+  });
+
+  testWidgets(
+      'les sections se révèlent progressivement puis atteignent le total final (one-shot)',
+      (tester) async {
+    const minutesByCategory = <CategoryId, int>{
+      CategoryId.work: 120,
+      CategoryId.sport: 30,
+    };
+    const totalMinutes = 150.0;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        home: const Scaffold(
+          body: CategoryDonutChart(minutesByCategory: minutesByCategory),
+        ),
+      ),
+    );
+
+    // Progression intermédiaire (avant la fin des 600ms de chartEntrance) :
+    // la somme des sections révélées est strictement inférieure au total.
+    await tester.pump(const Duration(milliseconds: 300));
+    var pieChart = tester.widget<PieChart>(find.byType(PieChart));
+    final intermediateSum =
+        pieChart.data.sections.fold<double>(0, (sum, s) => sum + s.value);
+    expect(intermediateSum, lessThan(totalMinutes));
+
+    await tester.pumpAndSettle();
+
+    pieChart = tester.widget<PieChart>(find.byType(PieChart));
+    final finalSum =
+        pieChart.data.sections.fold<double>(0, (sum, s) => sum + s.value);
+    expect(finalSum, totalMinutes);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets(
+      'balayage séquentiel : la première catégorie se remplit avant la seconde',
+      (tester) async {
+    const minutesByCategory = <CategoryId, int>{
+      CategoryId.work: 100,
+      CategoryId.sport: 100,
+    };
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light(),
+        home: const Scaffold(
+          body: CategoryDonutChart(minutesByCategory: minutesByCategory),
+        ),
+      ),
+    );
+
+    // À une progression intermédiaire, la catégorie `work` (première dans
+    // l'ordre d'itération de la Map, qui suit l'ordre de déclaration de
+    // CategoryId) doit être plus proche de sa valeur finale (100) que
+    // `sport` (deuxième), voire déjà complète alors que `sport` n'a pas
+    // encore commencé à se remplir.
+    await tester.pump(const Duration(milliseconds: 200));
+    final pieChart = tester.widget<PieChart>(find.byType(PieChart));
+    final sections = pieChart.data.sections;
+
+    expect(sections, isNotEmpty);
+    final firstValue = sections.first.value;
+    final remainingSum =
+        sections.skip(1).fold<double>(0, (sum, s) => sum + s.value);
+    expect(firstValue, greaterThanOrEqualTo(remainingSum));
+
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
   });
 }

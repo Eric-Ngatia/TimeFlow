@@ -15,6 +15,7 @@ Future<void> showDayDetailSheet(BuildContext context, DayStats dayStats) {
     context: context,
     isScrollControlled: true,
     useSafeArea: true,
+    showDragHandle: true,
     builder: (context) => DayDetailSheet(dayStats: dayStats),
   );
 }

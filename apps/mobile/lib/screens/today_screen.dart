@@ -8,6 +8,7 @@ import '../application/activities_provider.dart';
 import '../dev/seeds.dart';
 import '../sheets/activity_detail_sheet.dart';
 import '../sheets/new_activity_sheet.dart';
+import '../theme/motion_tokens.dart';
 import '../widgets/current_activity_card.dart';
 import '../widgets/theme_toggle_button.dart';
 import '../widgets/timeline.dart';
@@ -42,14 +43,24 @@ class TodayScreen extends ConsumerWidget {
         data: (activities) => ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            if (currentActivity != null) ...[
-              CurrentActivityCard(
-                activity: currentActivity,
-                onTap: () => showActivityDetailSheet(context, currentActivity),
-                onClose: () => _closeActivity(context, ref, currentActivity),
-              ),
-              const SizedBox(height: 24),
-            ],
+            AnimatedSwitcher(
+              duration: MotionTokens.fast,
+              transitionBuilder: (child, animation) =>
+                  FadeTransition(opacity: animation, child: child),
+              child: currentActivity != null
+                  ? Padding(
+                      key: ValueKey(currentActivity.id),
+                      padding: const EdgeInsets.only(bottom: 24),
+                      child: CurrentActivityCard(
+                        activity: currentActivity,
+                        onTap: () =>
+                            showActivityDetailSheet(context, currentActivity),
+                        onClose: () =>
+                            _closeActivity(context, ref, currentActivity),
+                      ),
+                    )
+                  : const SizedBox.shrink(key: ValueKey('empty')),
+            ),
             Text('Chronologie',
                 style: Theme.of(context).textTheme.headlineSmall),
             const SizedBox(height: 12),

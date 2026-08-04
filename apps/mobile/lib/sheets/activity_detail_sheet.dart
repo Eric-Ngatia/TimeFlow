@@ -19,6 +19,7 @@ Future<void> showActivityDetailSheet(BuildContext context, Activity activity) {
     context: context,
     isScrollControlled: true,
     useSafeArea: true,
+    showDragHandle: true,
     builder: (context) => ActivityDetailSheet(activity: activity),
   );
 }

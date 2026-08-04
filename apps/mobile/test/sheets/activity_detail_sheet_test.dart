@@ -30,6 +30,44 @@ void main() {
   });
 
   testWidgets(
+      'showActivityDetailSheet affiche la poignée de glissement (showDragHandle)',
+      (tester) async {
+    final activity = _buildActivity(endTime: DateTime.now());
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [databaseProvider.overrideWithValue(db)],
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          home: Builder(
+            builder: (context) => Scaffold(
+              body: Center(
+                child: ElevatedButton(
+                  onPressed: () => showActivityDetailSheet(context, activity),
+                  child: const Text('Ouvrir'),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('Ouvrir'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ActivityDetailSheet), findsOneWidget);
+
+    // Poignée de glissement Material 3 standard : pas de `Type`/`Key`
+    // public exposé, vérifiée via son libellé d'accessibilité (fallback
+    // anglais intégré au framework, cf. commentaire équivalent dans
+    // `history_screen_test.dart`).
+    final semantics = tester.ensureSemantics();
+    expect(find.bySemanticsLabel('Dismiss'), findsOneWidget);
+    semantics.dispose();
+  });
+
+  testWidgets(
       'affiche « Clôturer maintenant » seulement si l\'activité est en cours (RG-03)',
       (tester) async {
     final activity = _buildActivity();

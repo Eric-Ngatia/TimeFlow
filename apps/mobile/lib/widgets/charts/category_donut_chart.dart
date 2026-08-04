@@ -3,10 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:timeflow_domain/timeflow_domain.dart';
 
 import '../../theme/category_colors.dart';
+import '../../theme/motion_tokens.dart';
 
 /// Donut de répartition du temps par catégorie (`fl_chart`), utilisé par
 /// les vues Jour et Mois de l'écran Statistiques.
-class CategoryDonutChart extends StatelessWidget {
+///
+/// À l'ouverture, les sections se révèlent en balayage horaire séquentiel
+/// (la catégorie N se remplit entièrement avant que N+1 ne commence),
+/// animation one-shot jouée une seule fois au montage du widget (pas de
+/// rejeu sur mise à jour des données).
+class CategoryDonutChart extends StatefulWidget {
   const CategoryDonutChart(
       {required this.minutesByCategory, this.centerLabel, super.key});
 
@@ -19,8 +25,32 @@ class CategoryDonutChart extends StatelessWidget {
   final Widget? centerLabel;
 
   @override
+  State<CategoryDonutChart> createState() => _CategoryDonutChartState();
+}
+
+class _CategoryDonutChartState extends State<CategoryDonutChart>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: MotionTokens.chartEntrance,
+    )..forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
+    final minutesByCategory = widget.minutesByCategory;
     final total = minutesByCategory.values.fold<int>(0, (sum, m) => sum + m);
     final entries =
         minutesByCategory.entries.where((e) => e.value > 0).toList();
@@ -40,22 +70,39 @@ class CategoryDonutChart extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: <Widget>[
-          PieChart(
-            PieChartData(
-              sectionsSpace: 2,
-              centerSpaceRadius: 48,
-              sections: <PieChartSectionData>[
-                for (final entry in entries)
-                  PieChartSectionData(
-                    value: entry.value.toDouble(),
-                    color: categoryVisualFor(entry.key, brightness).color,
-                    title: '',
-                    radius: 28,
-                  ),
-              ],
-            ),
+          AnimatedBuilder(
+            animation: _controller,
+            builder: (context, _) {
+              final revealed = _controller.value * total;
+              final sections = <PieChartSectionData>[];
+              var cumulativeBefore = 0.0;
+              for (final entry in entries) {
+                final finalValue = entry.value.toDouble();
+                final animatedValue =
+                    (revealed - cumulativeBefore).clamp(0.0, finalValue);
+                if (animatedValue > 0) {
+                  sections.add(
+                    PieChartSectionData(
+                      value: animatedValue,
+                      color: categoryVisualFor(entry.key, brightness).color,
+                      title: '',
+                      radius: 28,
+                    ),
+                  );
+                }
+                cumulativeBefore += finalValue;
+              }
+              return PieChart(
+                swapAnimationDuration: Duration.zero,
+                PieChartData(
+                  sectionsSpace: 2,
+                  centerSpaceRadius: 48,
+                  sections: sections,
+                ),
+              );
+            },
           ),
-          if (centerLabel != null) centerLabel!,
+          if (widget.centerLabel != null) widget.centerLabel!,
         ],
       ),
     );

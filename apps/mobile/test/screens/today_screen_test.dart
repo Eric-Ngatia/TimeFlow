@@ -9,6 +9,7 @@ import 'package:timeflow_mobile/data/activities_dao.dart';
 import 'package:timeflow_mobile/data/database.dart';
 import 'package:timeflow_mobile/screens/today_screen.dart';
 import 'package:timeflow_mobile/theme/app_theme.dart';
+import 'package:timeflow_mobile/theme/motion_tokens.dart';
 
 import '../helpers/pump_helpers.dart';
 
@@ -53,6 +54,43 @@ void main() {
 
     expect(find.text('EN COURS'), findsOneWidget);
     expect(find.text('Développement'), findsWidgets);
+
+    await disposeWidgetTree(tester);
+  });
+
+  testWidgets(
+      "fermeture d'une activité en cours : CurrentActivityCard disparaît après l'animation",
+      (tester) async {
+    final db = AppDatabase.forTesting(NativeDatabase.memory());
+    addTearDown(db.close);
+    final dao = ActivitiesDao(db);
+    await dao.save(createActivity(
+      id: 'a1',
+      title: 'Développement',
+      category: CategoryId.work,
+      startTime: DateTime.now().subtract(const Duration(minutes: 20)),
+    ));
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [databaseProvider.overrideWithValue(db)],
+        child: MaterialApp(theme: AppTheme.light(), home: const TodayScreen()),
+      ),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    expect(find.text('EN COURS'), findsOneWidget);
+
+    await tester.tap(find.text('Clôturer'));
+    // `pump()` bornés (pas `pumpAndSettle()`) : le pouls de `CurrentActivityCard`
+    // tourne encore tant que la carte est présente pendant le fondu de sortie.
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    await tester.pump(MotionTokens.fast);
+    await tester.pump(const Duration(milliseconds: 50));
+
+    expect(find.text('EN COURS'), findsNothing);
 
     await disposeWidgetTree(tester);
   });

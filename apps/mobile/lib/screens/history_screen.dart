@@ -8,6 +8,7 @@ import '../application/stats_provider.dart';
 import '../sheets/day_detail_sheet.dart';
 import '../theme/category_colors.dart';
 import '../theme/design_tokens.dart';
+import '../widgets/animations/fade_slide_in.dart';
 import '../widgets/category_chip.dart';
 import '../widgets/history_day_item.dart';
 import '../widgets/theme_toggle_button.dart';
@@ -89,9 +90,11 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                         .toList();
 
                 if (filtered.isEmpty) {
-                  return Center(
-                    child: Text('Aucune activité.',
-                        style: Theme.of(context).textTheme.bodyMedium),
+                  return FadeSlideIn(
+                    child: Center(
+                      child: Text('Aucune activité.',
+                          style: Theme.of(context).textTheme.bodyMedium),
+                    ),
                   );
                 }
 
@@ -101,9 +104,12 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                 return ListView.builder(
                   padding: const EdgeInsets.all(16),
                   itemCount: sorted.length,
-                  itemBuilder: (context, index) => HistoryDayItem(
-                    dayStats: sorted[index],
-                    onTap: () => showDayDetailSheet(context, sorted[index]),
+                  itemBuilder: (context, index) => FadeSlideIn(
+                    delay: Duration(milliseconds: 40 * index.clamp(0, 6)),
+                    child: HistoryDayItem(
+                      dayStats: sorted[index],
+                      onTap: () => showDayDetailSheet(context, sorted[index]),
+                    ),
                   ),
                 );
               },
